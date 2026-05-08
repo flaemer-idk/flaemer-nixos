@@ -1,0 +1,255 @@
+include "window-focus.kdl"
+
+input {
+    keyboard {
+    xkb {
+    layout "us,ru"
+    options "grp:alt_shift_toggle"
+}
+numlock
+}   
+
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 
+touchpad {
+ tap
+ 
+ drag true
+ natural-scroll 
+ accel-speed 0.6
+ scroll-factor 1
+ scroll-method "edge"
+ scroll-button 273
+ tap-button-map "left-middle-right"
+ click-method "clickfinger"
+ }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 
+mouse {
+     middle-emulation
+     natural-scroll
+}
+}
+
+
+//Monitors да да это мониторы
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+output "eDP-1" {
+    mode  "1366x768@60"
+    scale 1
+    background-color "#003300"
+    backdrop-color "#1F1717"
+    transform "normal"
+    focus-at-startup
+    position x=0 y=0
+
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+output "HDMI-A-1" {
+    mode "1360x768@60.015"
+    scale 1
+    background-color "#003300"
+    backdrop-color "#1F1717"
+    transform "normal"
+    position x=0 y=-768
+}
+
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+layout {
+    gaps 14
+    center-focused-column "never"
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+focus-ring {
+    width 2
+    active-color "#bac2de"
+    inactive-color "#bac2de"
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+struts {
+     left -22
+     right -12
+     top -14
+     bottom -8
+}
+}
+
+//спавны ну там да
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+spawn-at-startup "aw-server"
+spawn-at-startup "awatcher"
+spawn-at-startup "sh" "-c" "swww-daemon & swww img ~/nix/home-manager/wallpaper/wolf"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "eww daemon"
+spawn-sh-at-startup "~/nix/home-manager/niri/start.sh"
+
+//енвиронмент
+environment {
+    DISPLAY ":0"
+    QT_QPA_PLATFORM "wayland"
+}
+ overview {
+    zoom 0.8
+    workspace-shadow {
+    off
+}
+}
+// виндоу рулес
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+window-rule {
+    match app-id="kitty"
+    match app-id="chromium-browser"       
+    match app-id="lite-xl"
+    match app-id="vesktop"
+    match app-id="org.gnome.gThumb"
+    match app-id="com.github.flaemer.gapless"
+    match app-id="org.vinegarhq.Sober"
+    match title="Steam Settings"
+    match title="io.github.kukuruzka165.materialgram"
+open-maximized true
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+window-rule {
+    match app-id="steam"
+    open-focused false //пашол он в сраку мраз бесит оно мусор его
+}
+
+window-rule {
+    clip-to-geometry true
+    geometry-corner-radius 8
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+window-rule {
+        match is-active=false
+        opacity 0.95
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+// бинды
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+// Запуск программ 
+	Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "kitty" "fish"; }
+    Mod+Shift+Return hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-show" "drun" "-theme-str" "element-icon { size: 3.0ch; }"; }
+    Mod+E hotkey-overlay-title="Run a File Manager: Nautilus" { spawn "nautilus" "--new-window"; }  
+    Mod+B hotkey-overlay-title="Run Chromium" { spawn "chromium"; } 
+    Alt+Q hotkey-overlay-title="Run Text Editor: Lite-xl " { spawn "lite-xl"; }
+    Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; } // Я если честно незнаю стоит ли его добавлять типо по идее да стоит он запускает hyprlock но по идее это не должно быть а должно как отдельное быть ибо она локскрин незнаю как сказать типо зачем надо его к аппсам хотя блен незнаю незнаю ну ладно добавлю типо потому что потому потому что выбор словно нет я хз короче отдельную секцю не стоит же делать зачем я пишу это вообще опять же не понимаю
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+    
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+// Fn кнопки 
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioNext { spawn "playerctl" "next"; }
+    XF86AudioPlay  { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev  { spawn "playerctl" "previous"; }
+    XF86MonBrightnessUp { spawn "brightnessctl" "set" "5%+"; }
+    XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
+// Типо Fn кнопки но без Fn короче что делает Fn но без Fn кнопок поняли?
+    Mod+ctrl+Page_Up allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    Mod+ctrl+Page_Down allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    Mod+ctrl+End allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    Mod+shift+Page_Down { spawn "playerctl" "next"; }
+    Mod+shift+End { spawn "playerctl" "play-pause"; }
+    Mod+shift+Page_Up { spawn "playerctl" "previous"; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+
+    Mod+Tab repeat=true { toggle-overview; }
+    Mod+Q { close-window; }
+    
+    Alt+Down  { focus-window-down; }
+    Alt+Up    { focus-window-up; }
+
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Home { focus-column-first; }
+    Mod+End  { focus-column-last; }
+    Mod+alt+Home { move-column-to-first; }
+    Mod+alt+End  { move-column-to-last; }
+
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+// Фокус окна ну хз   
+    Mod+Down      { focus-workspace-down; }
+    Mod+Up        { focus-workspace-up; }
+    Mod+Right     { focus-column-right; }
+    Mod+Left      { focus-column-left; }
+// Перемещение окна ну хз клавиатурой
+    Mod+alt+Down { move-column-to-workspace-down; }
+    Mod+alt+Up { move-column-to-workspace-up; }
+    Mod+alt+right { move-column-right; }
+    Mod+alt+left { move-column-left; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+    Mod+WheelScrollDown      cooldown-ms=80 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=80 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=80 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=80 { move-column-to-workspace-up; }
+
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    
+
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+M { maximize-column; }
+    Mod+F { fullscreen-window; }
+    mod+shift+f       { toggle-windowed-fullscreen; }
+    
+    Mod+Ctrl+F { expand-column-to-available-width; }
+
+    Mod+C { center-column; }
+
+    // Center all fully visible columns on screen.
+    Mod+Ctrl+C { center-visible-columns; }
+
+    Mod+Minus { set-column-width "-5%"; }
+    Mod+Equal { set-column-width "+5%"; }
+
+    // Finer height adjustments when in column with other windows.
+    Mod+Shift+Minus { set-window-height "-5%"; }
+    Mod+Shift+Equal { set-window-height "+5%"; }
+
+    // Move the focused window between the floating and the tiling layout.
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+
+    // Toggle tabbed column display mode.
+    // Windows in this column will appear as vertical tabs,
+    // rather than stacked on top of each other.
+    Mod+W { toggle-column-tabbed-display; }
+
+    Print { screenshot; }
+    Shift+Print { screenshot-screen; }
+    Ctrl+Print { screenshot-window; }
+
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+P { power-off-monitors; }
+
+}    
+ 

@@ -1,0 +1,1 @@
+/nix/store/8wqf9b8rcls1wa59xiy341knymfwy18q-home-manager-files/.config/eww/modules/speaker.sh

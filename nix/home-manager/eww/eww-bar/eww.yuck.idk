@@ -1,0 +1,243 @@
+;━━━━━ windows ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwindow bar 
+  :monitor 0
+  :stacking "fg" 
+  :exclusive true
+  :geometry (geometry :x 0 
+                      :y 0 
+                      :height "90%"   
+                      :width "44px"    
+                      :anchor "left center") 
+  :focusable false
+  (bar1 :screen 0))
+
+(defwindow win0 
+ :monitor 0
+ :stacking "fg" 
+ :exclusive true
+ :geometry (geometry  :x 0 
+                      :y 0 
+                      :height "15px" 
+                      :width "96%" 
+                      :anchor "top center")
+ :focusable false
+(bar2 :screen 0))
+(defwindow bar1 
+  :monitor 1
+  :stacking "fg" 
+  :exclusive true
+  :geometry (geometry :x 0 
+                      :y 0 
+                      :height "90%"   
+                      :width "44px"    
+                      :anchor "left center") 
+  :focusable false
+  (bar1 :screen 0))
+
+(defwindow win01 
+ :monitor 1
+ :stacking "fg" 
+ :exclusive true
+ :geometry (geometry  :x 0 
+                      :y 0 
+                      :height "15px" 
+                      :width "96%" 
+                      :anchor "top center")
+ :focusable false
+(bar2 :screen 0))
+(defwindow win1
+ :monitor 0
+ :stacking "fg" 
+ :exclusive true
+ :geometry (geometry  :x 0 
+                      :y 0 
+                      :height "15px" 
+                      :width "0%" 
+                      :anchor "right center")
+ :focusable false
+(bar3 :screen 0))
+(defpoll bluetooth_icon :interval "2s" "modules/bluetooth.sh --status")
+
+;━━━━━ bars ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(defwidget bar1 [screen]
+(box :orientation "v"
+     :space-evenly false
+     :class "bar"
+     
+(box :valign "start"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (tray))
+
+
+(box :valign "center"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (date))
+
+(box :valign "end"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (bluetooth)
+   )))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bar2 [screen]
+(box :orientation "h"
+     :space-evenly false
+     :class "bar"
+(box :halign "start"
+     :spacing 5
+     :hexpand true
+     :space-evenly false
+   (battery))
+
+    
+(box :halign "center"
+     :spacing 7
+     :hexpand true
+     :space-evenly false
+   (player))
+
+(box :halign "end"
+     :spacing 7
+     :hexpand true
+     :space-evenly false
+   (speaker)
+   (nothing))))  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bar3 [screen]
+(box :orientation "v"
+     :space-evenly false
+     :class "bar"
+     
+(box :valign "start"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (bluetooth))
+
+
+(box :valign "center"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+     )
+
+(box :valign "end"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   )))
+ 
+(deflisten player_listen :initial '{"show": "no", "content": ""}' "./modules/player.sh")
+(defpoll bluetooth_status :interval "1s" "./modules/bluetooth.sh")
+(deflisten net_poll :initial '{"icon": "󰤮"}' "./modules/ping.sh")
+;время ну что сказать я хз
+(defpoll hour :interval "1s" "date +%H")
+(defpoll min  :interval "1s" "date +%M")
+(defpoll day  :interval "1h" "date +%d/%m")
+
+(defpoll battery_poll :interval "4s" "./modules/battery.sh")
+(defpoll speaker_poll :interval "0.3s" "./modules/speaker.sh")
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget tray []
+  (box :class "tray"
+    (systray :orientation "v" :icon-size 28 :spacing 0)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+(defwidget icon-module [icon ?class ?visible]
+  (box :class "${class} icon-module"
+       :orientation "h"
+       :halign "end"
+       :space-evenly false
+       :visible {visible ?: true} ; because the argument is optional
+    (label :class "icon-module__icon" :text "${icon}")
+    (children)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget player []
+  (icon-module :class "player" :icon "" :visible {player_listen.show == "yes"}
+    (literal :content {player_listen.content})))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget date []
+  (box :orientation "v" 
+       :class "date" 
+       :space-evenly false
+       :halign "center"
+    (label :class "time" :text hour)
+    (label :class "time"  :text min)
+    (box :class "time" :halign "center" 
+         (label :text "—")) ;; Тонкий разделитель
+    (label :class "time" :text day :angle 90)))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget nothing []
+  (box :class "separator" :orientation "horizontal" :spacing 155 :space-evenly true
+    (label :text "......":class "separator-label")))
+  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget speaker []
+  (eventbox :onscroll "./modules/speaker.sh {}" 
+            :class "speaker"
+    (button :onclick "pwvucontrol &"          
+      (box :orientation "h" 
+           :space-evenly false 
+           :spacing 11
+        (label :class "speaker-icon" 
+               :text {speaker_poll.icon})    
+        (label :class "speaker-text" 
+               :text {speaker_poll.content}) 
+      )
+    )
+  )
+)
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget battery []
+  (box :class "battery"
+    (icon-module :class "battery-icon" :icon {battery_poll.icon} 
+      (label  :text {battery_poll.percentage}))))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bluetooth []
+  (button :onclick "blueman-manager &" 
+          :class "bluetooth"
+    (box 
+         :class "blue"
+         :orientation "v"
+         :space-evenly false
+         :spacing 5
+      (label :text {bluetooth_status})
+    )
+  )
+)  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+ (defwidget network []
+  (button :onclick "kitty nmtui &" ;; Открывает настройки сети
+          :class "network"
+    (box :space-evenly false :spacing 8
+    :orientation "v"
+      (label :class "net-icon" :text {net_poll.icon})
+    )
+  )
+)     
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

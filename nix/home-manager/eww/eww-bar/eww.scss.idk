@@ -1,0 +1,149 @@
+$foreground: #ffffff;
+$grey: #aaaaaa;
+$легендаУзбекистана: rgba(0, 0, 0, 0.5);
+$foreground-alt: #465059;
+$red: #ff6565;
+$green: #b8cc52;
+$yellow: #e6c446;
+$blue: #68d4ff;
+$magenta: #ffa3aa;
+$cyan: #36a3d9;
+$white: #ffffff;
+$rosewater: #f5e0dc;
+$flamingo: #f2cdcd;
+$pink: #f5c2e7;
+$mauve: #cba6f7;
+$red: #f38ba8;
+$maroon: #eba0ac;
+$peach: #fab387;
+$yellow: #f9e2af;
+$green: #a6e3a1;
+$teal: #94e2d5;
+$sky: #89dceb;
+$sapphire: #74c7ec;
+$blue: #89b4fa;
+$lavender: #b4befe;
+$text: #a6adc8;
+$subtext1: #bac2de;
+$subtext0: #a6adc8;
+$overlay2: #9399b2;
+$overlay1: #7f849c;
+$overlay0: #6c7086;
+$surface2: #585b70;
+$surface1: #45475a;
+$surface0: #313244;
+$base: rgba(0, 0, 0, 0.3);
+$mantle: #181825;
+$crust: #11111b;
+* {
+  all: unset;
+  border-radius: 2px;
+  font-family: "Adwaita Sans";
+  font-weight: 600
+  
+}
+window {
+  background: transparent;
+  border-radius: 8px;
+  background-color: transparent;
+  padding: 0px;
+}
+.time {
+  background: transparent;
+  
+}
+.player {
+  background: $легендаУзбекистана;
+  margin: 9px;
+  color: $text;
+  padding: 6px;
+  font-size: 18px;
+}
+.battery {
+  background: $легендаУзбекистана;
+  font-size: 18px;
+}
+
+.speaker {
+  background: $легендаУзбекистана;
+  margin: 9px;
+  padding: 6px;
+  font-size: 18px;
+}
+
+.bluetooth {
+  background: $легендаУзбекистана;
+  padding: 2px;
+  min-width: 20px;
+  font-size: 25px;
+}
+.network {
+  background: $легендаУзбекистана;
+  padding: 2px;
+  min-width: 25px;
+  font-size: 25px;
+}
+.tray {
+  background: $легендаУзбекистана;
+  padding: 2px;
+}
+
+.popup* {
+  background-color: $легендаУзбекистана;
+  padding: 1.4px;
+  border-radius: 16px;
+}
+.date {
+  background: $легендаУзбекистана;
+  padding: 6px;
+  margin: 0px;
+  font-size: 18px;
+}
+.bar {
+  font-family: "Noto Sans";
+  font-size: 17px;
+  background-color: transparent;
+  margin: 4 0px;
+  
+}
+.tooltip {
+  background-color: $cyan;
+  border-radius: 0px;
+  font-size: 13px;
+  padding: 7px 8px;
+}
+.icon-module {
+  margin: 0 5px;
+  & > &__icon {
+    margin-right: 5px;
+  }
+}
+  button {
+    margin: 0px 0px;
+    color: #ffffff;
+  }
+  
+  
+  .occupied {
+    color: $cyan;
+  }
+
+  .focused {
+    color: $red;
+  }
+
+  .urgent {
+    color: $red; 
+      }
+    .separator-label {
+     background-color: transparent;
+     color: transparent;
+     }
+
+
+  .empty {
+    padding-top: 2px;
+    background-color: $red;
+    font-size: 10px;
+  }
+

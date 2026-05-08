@@ -1,0 +1,69 @@
+#packages for me
+{ pkgs, ...}:{
+environment.systemPackages = with pkgs; [
+
+polkit_gnome 
+file-roller
+
+mako
+eww
+xwayland-satellite
+
+#themes bro
+adwaita-qt
+arc-theme
+#papirus-icon-theme
+material-design-icons
+material-icons
+
+  awatcher 
+    activitywatch
+nautilus
+
+#internetik
+chromium
+vesktop
+materialgram
+
+lite-xl
+
+
+#это ну работа не фейк да да у меня нет ее ну медиа музыка видео там
+obs-studio
+mpv
+
+#программы ну для вм всяких
+rofi
+
+#терминал и терминальное
+kitty
+wl-clipboard
+swww
+cliphist
+
+hyprlock
+
+#гамес ого какая кнопочка №№№ № № № №№ №№№  
+gamemode 
+mangohud
+gamescope
+#steam-run
+umu-launcher
+ # возможно сделать отдельным конфигом под спорные ибо ну спорные много зависимостей и ненужны
+ # типо зачем мне вайн на пк где мне лишь зайти в игру и все надо бы порт протон или чего нить найти
+ # или скрипт под протон
+ # я чет не нашел а уже 4 декабря почти а именно 3 декабря 20;55 пишу в это время
+wineWowPackages.waylandFull
+winetricks
+
+blueman
+pwvucontrol
+gnome-disk-utility
+pamixer
+(callPackage /home/flaemer/nix/pkgs/fine.nix { })
+];
+}   
+
+
+
+
