@@ -19,6 +19,7 @@
     
     ./programs/programs.nix           #сам хз зачем нужно
     ./Plasma.nix
+    ./fish.nix
     ./services/zram.nix               #Zram патриотическая озу
     ./services/openssh.nix            #SSH вот такое да
 
