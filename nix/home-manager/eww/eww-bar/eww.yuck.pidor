@@ -57,7 +57,37 @@
  :focusable false
 (bar3 :screen 0))
 (defpoll bluetooth_icon :interval "2s" "modules/bluetooth.sh --status")
+;; Переменные
+(defpoll net_status :interval "5s" "./modules/network.sh")
+(defpoll tasks :interval "1s" "./modules/niri_tasks.sh")
 
+;; Окно Power Menu
+(defwindow powermenu
+  :monitor 0
+  :stacking "fg"
+  :geometry (geometry :x "10px" :y "10px" :width "50px" :height "150px" :anchor "left bottom")
+  (box :orientation "v" :class "popup" :spacing 10
+    (button :onclick "systemctl poweroff" "󰐥")
+    (button :onclick "systemctl reboot" "󰑓")
+    (button :onclick "systemctl suspend" "󰒲")
+    (button :onclick "eww close powermenu" "󰅖")))
+
+;; Окно для правой панели (Запущенные программы)
+(defwindow taskbar
+  :monitor 0
+  :stacking "fg"
+  :exclusive true
+  :geometry (geometry :x 0 :y 0 :height "50%" :width "44px" :anchor "right center")
+  (literal :content tasks))
+
+;; Обновленный виджет Network
+(defwidget network []
+  (button :onclick "kitty nmtui &"
+          :class "network ${net_status.class}"
+    (box :orientation "v"
+      (label :text {net_status.icon}))))
+
+;; Добавь кнопку вызова меню в твой bar1 (внизу)
 ;━━━━━ bars ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 (defwidget bar1 [screen]
 (box :orientation "v"
@@ -75,6 +105,7 @@
      :spacing 5
      :space-evenly false
      :vexpand true
+ (button :onclick "eww open --toggle powermenu" "󰐥")
    (date))
 
 (box :valign "end"

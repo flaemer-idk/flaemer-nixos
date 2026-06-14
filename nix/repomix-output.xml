@@ -1,0 +1,2496 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: zapret/bin/**, zapret/lists/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+home-manager/
+  desktop/
+    icons/
+      AdoptMe.png
+      G4Music.png
+      Gearworks.png
+    AdoptMe.nix
+    Gearworks.nix
+  eww/
+    eww-bar/
+      modules/
+        battery.sh.pidor
+        bluetooth.sh.pidor
+        network.sh
+        niri_tasks.sh
+        ping.sh.pidor
+        player.sh.pidor
+        speaker.sh.pidor
+      eww.scss.pidor
+      eww.yuck.pidor
+    eww.nix
+  niri/
+    config.kdl
+    config.nix
+    start.sh
+    window-focus.kdl
+  other/
+    fastfetch.nix
+    hyprlock.nix
+    kitty.nix
+    mangohud.nix
+    themes.nix
+  rofi/
+    rofi.nix
+    rofi.rasi
+  wallpaper/
+    wolf.png
+pkgs/
+  fine.nix
+  packages-cli-notebook.nix
+  packages-cli.nix
+  packages-fonts.nix
+  packages-notebook.nix
+  packages-servermaybe.nix
+  packages.nix
+  wlcontrol.nix
+programs/
+  programs.nix
+  wayfire.nix
+services/
+  gonic.nix
+  jellyfin.nix
+  Komga.nix
+  Memos.nix
+  notebook-services.nix
+  openssh.nix
+  Photoview.nix
+  printer.nix
+  services.nix
+  zram.nix
+user/
+  user.nix
+zapret/
+  zapret.nix
+configuration.nix
+flake.lock
+flake.nix
+hardware-notebook.nix
+hardware-pc.nix
+hardware-server.nix
+home.nix
+Plasma.nix
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="services/Komga.nix">
+{ config, pkgs, lib, ... }: {
+  services.komga = {
+    enable = true;
+    port = 8040;
+  };
+}
+</file>
+
+<file path="Plasma.nix">
+# /etc/nixos/plasma.nix
+{ config, pkgs, ... }:
+
+{
+  services.desktopManager.plasma6.enable = true;
+
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    kpat         # Пасьянс (Solitaire)
+    kmahjongg    # Маджонг
+    kmines       # Сапер
+    ksudoku      # Судоку
+
+    elisa        # Аудиоплеер
+    konversation # IRC-клиент
+    khelpcenter  # Руководства и справка
+    oxygen       # Устаревшие темы оформления
+  ];
+
+  # Полезные дополнения для стабильной работы Wayland-окружения
+  environment.systemPackages = with pkgs; [
+    kdePackages.sddm-kcm # Модуль для настройки SDDM в системных параметрах KDE
+    wayland-utils       # Базовые утилиты диагностики Wayland
+  ];
+}
+</file>
+
+<file path="home-manager/desktop/AdoptMe.nix">
+{ ... }: {
+xdg.desktopEntries = {
+  "AdoptMe" = {
+    name = "Adopt Me";
+    genericName = "Roblox Game";
+    comment = "игра где надо быть кем то таким то";
+    icon = ./icons/AdoptMe.png; 
+    exec = "flatpak run org.vinegarhq.Sober \"roblox://placeId=920587237\"";
+    terminal = false;
+    categories = [ "Game" ];
+  };
+};
+}
+</file>
+
+<file path="home-manager/desktop/Gearworks.nix">
+{ ... }: {
+xdg.desktopEntries = {
+  "Gearworks" = {
+    name = "Gearworks";
+    genericName = "Roblox Game";
+    comment = "игра где надо быть кем то таким то";
+    icon = ./icons/Gearworks.png; 
+    exec = "flatpak run org.vinegarhq.Sober \"roblox://placeId=13158116555\"";
+    terminal = false;
+    categories = [ "Game" ];
+  };
+};
+}
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/battery.sh.pidor">
+#!/bin/sh
+
+BAT_PATH="/sys/class/power_supply/BAT1"
+
+if [ ! -d "$BAT_PATH" ]; then
+    echo "{\"percentage\": \"N/A\", \"status\": \"No battery\", \"icon\": \"\", \"charging\": \"false\"}"
+    exit 0
+fi
+
+capacity=$(cat "$BAT_PATH/capacity" 2>/dev/null || echo "0")
+status=$(cat "$BAT_PATH/status" 2>/dev/null || echo "Unknown")
+
+if [ "$status" = "Charging" ]; then
+    charging="true"
+if [ $capacity -ge 100 ]; then
+        icon="󱐋󰁹"
+    elif [ $capacity -ge 90 ]; then
+        icon="󱐋󰂂"
+    elif [ $capacity -ge 80 ]; then
+        icon="󱐋󰂁"
+    elif [ $capacity -ge 70 ]; then  
+        icon="󱐋󰂀"
+    elif [ $capacity -ge 60 ]; then
+        icon="󱐋󰁿"
+    elif [ $capacity -ge 50 ]; then
+        icon="󱐋󰁾"
+    elif [ $capacity -ge 40 ]; then
+        icon="󱐋󰁽"
+    elif [ $capacity -ge 30 ]; then
+        icon="󱐋󰁼"  
+    elif [ $capacity -ge 20 ]; then
+        icon="󱐋󰁻"
+    elif [ $capacity -ge 10 ]; then
+        icon="󱐋󰁺"              
+    else
+        icon="󱐋󰂎"
+    fi
+else
+    charging="false"
+ if [ $capacity -ge 100 ]; then
+        icon="󰁹"
+    elif [ $capacity -ge 90 ]; then
+        icon="󰂂"
+    elif [ $capacity -ge 80 ]; then
+        icon="󰂁"
+    elif [ $capacity -ge 70 ]; then
+        icon="󰂀"
+    elif [ $capacity -ge 60 ]; then
+        icon="󰁿"
+    elif [ $capacity -ge 50 ]; then
+        icon="󰁾"
+    elif [ $capacity -ge 40 ]; then
+        icon="󰁽"
+    elif [ $capacity -ge 30 ]; then
+        icon="󰁼"  
+    elif [ $capacity -ge 20 ]; then
+        icon="󰁻"
+    elif [ $capacity -ge 10 ]; then
+        icon="󰁺"                
+    else
+        icon="󰂎"
+    fi
+fi
+
+echo "{\"percentage\": \"$capacity%\", \"status\": \"$status\", \"icon\": \"$icon\", \"charging\": \"$charging\"}"
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/bluetooth.sh.pidor">
+#!/usr/bin/env bash
+
+if bluetoothctl info | grep -q "Connected: yes"; then
+    echo "󰂱"
+else
+    echo "󰂲"о
+fi
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/network.sh">
+# Проверяем интерфейсы через nmcli
+STATUS=$(nmcli -t -f TYPE,STATE dev | grep "connected" | head -n 1)
+
+if [[ -z "$STATUS" ]]; then
+    echo '{"icon": "󰤮", "class": "disconnected", "name": "Offline"}'
+    exit 0
+fi
+
+# Если есть ethernet
+if [[ "$STATUS" == "ethernet:connected" ]]; then
+    ICON="󰈀"
+    CLASS="ethernet"
+else
+    # Если wifi, проверяем реальный интернет пингом
+    if ping -c 1 1.1.1.1 > /dev/null 2>&1; then
+        ICON="󰤨"
+        CLASS="wifi"
+    else
+        ICON="󰤨!" # Иконка с восклицательным знаком (или 󰤫)
+        CLASS="no-internet"
+    fi
+fi
+
+echo "{\"icon\": \"$ICON\", \"class\": \"$CLASS\"}"
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/niri_tasks.sh">
+# Получаем JSON окон от niri
+WINDOWS=$(niri msg --json windows)
+
+# Если окон нет, выходим
+if [ "$WINDOWS" == "[]" ] || [ -z "$WINDOWS" ]; then
+    echo "(box)"
+    exit 0
+fi
+
+# Генерируем yuck-код. 
+# Берем первую букву app_id или title и делаем кнопку.
+echo "$WINDOWS" | jq -r '
+  .[] | "(button :class \"task-entry\" :onclick \"niri msg action focus-window --id \(.id)\" :tooltip \"\(.title)\" \"\(.app_id // .title | .[0:1] | ascii_upcase)\")"
+' | tr '\n' ' ' | sed 's/^/(box :orientation "v" :space-evenly false :spacing 10 /' | sed 's/$/)/'
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/ping.sh.pidor">
+#!/bin/sh
+
+# Получаем имя текущей сети
+SSID=$(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2)
+
+if [ -z "$SSID" ]; then
+    # Если Wi-Fi не подключен, проверяем провод (Ethernet)
+    ETH_STATUS=$(nmcli device status | grep "^eth0" | awk '{print $3}')
+    if [ "$ETH_STATUS" = "connected" ]; then
+        echo "{\"icon\": \"󰈀\", \"name\": \"Ethernet\"}"
+    else
+        echo "{\"icon\": \"󰤮\", \"name\": \"Disconnected\"}"
+    fi
+else
+    # Если Wi-Fi подключен, выбираем иконку по уровню сигнала
+    SIGNAL=$(nmcli -f IN-USE,SIGNAL dev wifi | grep '*' | awk '{print $2}')
+    
+    if [ "$SIGNAL" -gt 75 ]; then icon="󰤨";
+    elif [ "$SIGNAL" -gt 50 ]; then icon="󰤥";
+    elif [ "$SIGNAL" -gt 25 ]; then icon="󰤢";
+    else icon="󰤟"; fi
+
+    echo "{\"icon\": \"$icon\"}"
+fi
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/player.sh.pidor">
+#!/bin/sh
+
+
+echo "{\"show\": \"no\", \"content\": \"\"}"
+playerctl --follow metadata --format '{{artist}} ¿¿¿¿¿ {{ title }}' 2> /dev/null | while read -r line ; do 
+   case "$line" in
+     ?*\ ¿¿¿¿¿\ ?*) text="$(echo "$line" | sed "s/¿¿¿¿¿/-/")" && should_show="yes";;
+     *) text="" && should_show="no" ;;
+  esac
+
+  echo "{\"show\": \"$should_show\", \"content\": \"(box (label :text \\\"$text\\\"))\"}"
+done
+</file>
+
+<file path="home-manager/eww/eww-bar/modules/speaker.sh.pidor">
+#!/bin/sh
+
+case $1 in
+    "up")    command="-i 5 --allow-boost" ;;
+    "down")  command="-d 5 --allow-boost" ;;
+    "toggle") command="-t" ;; # Исправил опечатку toogle -> toggle
+    *)       command="" ;;    # Дефолтный вариант всегда в конце
+esac
+
+[ -n "$command" ] && pamixer $command 
+mute=$(pamixer --get-mute)
+if [ "$mute" = "true" ]; then
+      volume=""
+      icon=""
+else 
+      volume="$(pamixer --get-volume)"
+      if [ "$volume" -gt 75 ]; then
+            icon=""
+      elif [ "$volume" -gt 50 ]; then
+            icon="󰕾"
+      elif [ "$volume" -gt 25 ]; then 
+            icon=""            
+      elif [ "$volume" -gt 0 ]; then 
+            icon=""
+      else 
+            icon=""
+      fi
+      volume="$volume%"
+fi
+
+echo "{\"content\": \"$volume\", \"icon\": \"$icon\"}"
+</file>
+
+<file path="home-manager/eww/eww-bar/eww.scss.pidor">
+$foreground: #ffffff;
+$grey: #aaaaaa;
+$легендаУзбекистана: rgba(0, 0, 0, 0.5);
+$foreground-alt: #465059;
+$red: #ff6565;
+$green: #b8cc52;
+$yellow: #e6c446;
+$blue: #68d4ff;
+$magenta: #ffa3aa;
+$cyan: #36a3d9;
+$white: #ffffff;
+$rosewater: #f5e0dc;
+$flamingo: #f2cdcd;
+$pink: #f5c2e7;
+$mauve: #cba6f7;
+$red: #f38ba8;
+$maroon: #eba0ac;
+$peach: #fab387;
+$yellow: #f9e2af;
+$green: #a6e3a1;
+$teal: #94e2d5;
+$sky: #89dceb;
+$sapphire: #74c7ec;
+$blue: #89b4fa;
+$lavender: #b4befe;
+$text: #a6adc8;
+$subtext1: #bac2de;
+$subtext0: #a6adc8;
+$overlay2: #9399b2;
+$overlay1: #7f849c;
+$overlay0: #6c7086;
+$surface2: #585b70;
+$surface1: #45475a;
+$surface0: #313244;
+$base: rgba(0, 0, 0, 0.3);
+$mantle: #181825;
+$crust: #11111b;
+* {
+  all: unset;
+  border-radius: 2px;
+  font-family: "Adwaita Sans";
+  font-weight: 600
+  // Цвета для сети
+.network {
+  &.wifi { color: $green; }
+  &.ethernet { color: $blue; }
+  &.no-internet { color: $yellow; }
+  &.disconnected { color: $red; }
+}
+
+// Стили для списка задач
+.task-btn {
+  background: $легендаУзбекистана;
+  margin: 4px;
+  padding: 8px 0;
+  border-radius: 8px;
+  color: $foreground;
+  font-size: 14px;
+  &:hover {
+    background: $surface0;
+    border: 1px solid $cyan;
+  }
+}
+
+// Стили для Power Menu
+.popup {
+  background-color: $легендаУзбекистана;
+  padding: 10px;
+  border-radius: 12px;
+  button {
+    font-size: 25px;
+    padding: 5px;
+    &:hover { color: $red; }
+  }
+}
+}
+window {
+  background: transparent;
+  border-radius: 8px;
+  background-color: transparent;
+  padding: 0px;
+}
+.time {
+  background: transparent;
+  
+}
+.player {
+  background: $легендаУзбекистана;
+  margin: 9px;
+  color: $text;
+  padding: 6px;
+  font-size: 18px;
+}
+.battery {
+  background: $легендаУзбекистана;
+  font-size: 18px;
+}
+
+.speaker {
+  background: $легендаУзбекистана;
+  margin: 9px;
+  padding: 6px;
+  font-size: 18px;
+}
+
+.bluetooth {
+  background: $легендаУзбекистана;
+  padding: 2px;
+  min-width: 20px;
+  font-size: 25px;
+}
+.network {
+  background: $легендаУзбекистана;
+  padding: 2px;
+  min-width: 25px;
+  font-size: 25px;
+}
+.tray {
+  background: $легендаУзбекистана;
+  padding: 2px;
+}
+
+.popup* {
+  background-color: $легендаУзбекистана;
+  padding: 1.4px;
+  border-radius: 16px;
+}
+.date {
+  background: $легендаУзбекистана;
+  padding: 6px;
+  margin: 0px;
+  font-size: 18px;
+}
+.bar {
+  font-family: "Noto Sans";
+  font-size: 17px;
+  background-color: transparent;
+  margin: 4 0px;
+  
+}
+.tooltip {
+  background-color: $cyan;
+  border-radius: 0px;
+  font-size: 13px;
+  padding: 7px 8px;
+}
+.icon-module {
+  margin: 0 5px;
+  & > &__icon {
+    margin-right: 5px;
+  }
+}
+  button {
+    margin: 0px 0px;
+    color: #ffffff;
+  }
+  
+  
+  .occupied {
+    color: $cyan;
+  }
+
+  .focused {
+    color: $red;
+  }
+
+  .urgent {
+    color: $red; 
+      }
+    .separator-label {
+     background-color: transparent;
+     color: transparent;
+     }
+
+
+  .empty {
+    padding-top: 2px;
+    background-color: $red;
+    font-size: 10px;
+  }
+</file>
+
+<file path="home-manager/eww/eww-bar/eww.yuck.pidor">
+;━━━━━ windows ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwindow bar 
+  :monitor 0
+  :stacking "fg" 
+  :exclusive true
+  :geometry (geometry :x 0 
+                      :y 0 
+                      :height "90%"   
+                      :width "44px"    
+                      :anchor "left center") 
+  :focusable false
+  (bar1 :screen 0))
+
+(defwindow win0 
+ :monitor 0
+ :stacking "fg" 
+ :exclusive true
+ :geometry (geometry  :x 0 
+                      :y 0 
+                      :height "15px" 
+                      :width "96%" 
+                      :anchor "top center")
+ :focusable false
+(bar2 :screen 0))
+(defwindow bar1 
+  :monitor 1
+  :stacking "fg" 
+  :exclusive true
+  :geometry (geometry :x 0 
+                      :y 0 
+                      :height "90%"   
+                      :width "44px"    
+                      :anchor "left center") 
+  :focusable false
+  (bar1 :screen 0))
+
+(defwindow win01 
+ :monitor 1
+ :stacking "fg" 
+ :exclusive true
+ :geometry (geometry  :x 0 
+                      :y 0 
+                      :height "15px" 
+                      :width "96%" 
+                      :anchor "top center")
+ :focusable false
+(bar2 :screen 0))
+(defwindow win1
+ :monitor 0
+ :stacking "fg" 
+ :exclusive true
+ :geometry (geometry  :x 0 
+                      :y 0 
+                      :height "15px" 
+                      :width "0%" 
+                      :anchor "right center")
+ :focusable false
+(bar3 :screen 0))
+(defpoll bluetooth_icon :interval "2s" "modules/bluetooth.sh --status")
+;; Переменные
+(defpoll net_status :interval "5s" "./modules/network.sh")
+(defpoll tasks :interval "1s" "./modules/niri_tasks.sh")
+
+;; Окно Power Menu
+(defwindow powermenu
+  :monitor 0
+  :stacking "fg"
+  :geometry (geometry :x "10px" :y "10px" :width "50px" :height "150px" :anchor "left bottom")
+  (box :orientation "v" :class "popup" :spacing 10
+    (button :onclick "systemctl poweroff" "󰐥")
+    (button :onclick "systemctl reboot" "󰑓")
+    (button :onclick "systemctl suspend" "󰒲")
+    (button :onclick "eww close powermenu" "󰅖")))
+
+;; Окно для правой панели (Запущенные программы)
+(defwindow taskbar
+  :monitor 0
+  :stacking "fg"
+  :exclusive true
+  :geometry (geometry :x 0 :y 0 :height "50%" :width "44px" :anchor "right center")
+  (literal :content tasks))
+
+;; Обновленный виджет Network
+(defwidget network []
+  (button :onclick "kitty nmtui &"
+          :class "network ${net_status.class}"
+    (box :orientation "v"
+      (label :text {net_status.icon}))))
+
+;; Добавь кнопку вызова меню в твой bar1 (внизу)
+;━━━━━ bars ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(defwidget bar1 [screen]
+(box :orientation "v"
+     :space-evenly false
+     :class "bar"
+     
+(box :valign "start"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (tray))
+
+
+(box :valign "center"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+ (button :onclick "eww open --toggle powermenu" "󰐥")
+   (date))
+
+(box :valign "end"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (bluetooth)
+   )))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bar2 [screen]
+(box :orientation "h"
+     :space-evenly false
+     :class "bar"
+(box :halign "start"
+     :spacing 5
+     :hexpand true
+     :space-evenly false
+   (battery))
+
+    
+(box :halign "center"
+     :spacing 7
+     :hexpand true
+     :space-evenly false
+   (player))
+
+(box :halign "end"
+     :spacing 7
+     :hexpand true
+     :space-evenly false
+   (speaker)
+   (nothing))))  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bar3 [screen]
+(box :orientation "v"
+     :space-evenly false
+     :class "bar"
+     
+(box :valign "start"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   (bluetooth))
+
+
+(box :valign "center"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+     )
+
+(box :valign "end"
+     :spacing 5
+     :space-evenly false
+     :vexpand true
+   )))
+ 
+(deflisten player_listen :initial '{"show": "no", "content": ""}' "./modules/player.sh")
+(defpoll bluetooth_status :interval "1s" "./modules/bluetooth.sh")
+(deflisten net_poll :initial '{"icon": "󰤮"}' "./modules/ping.sh")
+;время ну что сказать я хз
+(defpoll hour :interval "1s" "date +%H")
+(defpoll min  :interval "1s" "date +%M")
+(defpoll day  :interval "1h" "date +%d/%m")
+
+(defpoll battery_poll :interval "4s" "./modules/battery.sh")
+(defpoll speaker_poll :interval "0.3s" "./modules/speaker.sh")
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget tray []
+  (box :class "tray"
+    (systray :orientation "v" :icon-size 28 :spacing 0)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+(defwidget icon-module [icon ?class ?visible]
+  (box :class "${class} icon-module"
+       :orientation "h"
+       :halign "end"
+       :space-evenly false
+       :visible {visible ?: true} ; because the argument is optional
+    (label :class "icon-module__icon" :text "${icon}")
+    (children)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget player []
+  (icon-module :class "player" :icon "" :visible {player_listen.show == "yes"}
+    (literal :content {player_listen.content})))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget date []
+  (box :orientation "v" 
+       :class "date" 
+       :space-evenly false
+       :halign "center"
+    (label :class "time" :text hour)
+    (label :class "time"  :text min)
+    (box :class "time" :halign "center" 
+         (label :text "—")) ;; Тонкий разделитель
+    (label :class "time" :text day :angle 90)))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget nothing []
+  (box :class "separator" :orientation "horizontal" :spacing 155 :space-evenly true
+    (label :text "......":class "separator-label")))
+  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget speaker []
+  (eventbox :onscroll "./modules/speaker.sh {}" 
+            :class "speaker"
+    (button :onclick "pwvucontrol &"          
+      (box :orientation "h" 
+           :space-evenly false 
+           :spacing 11
+        (label :class "speaker-icon" 
+               :text {speaker_poll.icon})    
+        (label :class "speaker-text" 
+               :text {speaker_poll.content}) 
+      )
+    )
+  )
+)
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget battery []
+  (box :class "battery"
+    (icon-module :class "battery-icon" :icon {battery_poll.icon} 
+      (label  :text {battery_poll.percentage}))))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bluetooth []
+  (button :onclick "blueman-manager &" 
+          :class "bluetooth"
+    (box 
+         :class "blue"
+         :orientation "v"
+         :space-evenly false
+         :spacing 5
+      (label :text {bluetooth_status})
+    )
+  )
+)  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+ (defwidget network []
+  (button :onclick "kitty nmtui &" ;; Открывает настройки сети
+          :class "network"
+    (box :space-evenly false :spacing 8
+    :orientation "v"
+      (label :class "net-icon" :text {net_poll.icon})
+    )
+  )
+)     
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+</file>
+
+<file path="home-manager/eww/eww.nix">
+{ config, pkgs, lib, ... }:
+
+let
+  makeExecutable = path: {
+    source = path;
+    executable = true;
+  };
+in
+{
+  xdg.configFile = {
+    "eww/eww.scss".source = ./eww-bar/eww.scss;
+    "eww/eww.yuck".source = ./eww-bar/eww.yuck;
+
+    #modules btw
+    "eww/modules/battery.sh" = makeExecutable ./eww-bar/modules/battery.sh;
+    "eww/modules/player.sh" = makeExecutable ./eww-bar/modules/player.sh;
+    "eww/modules/speaker.sh" = makeExecutable ./eww-bar/modules/speaker.sh;
+    "eww/modules/ping.sh" = makeExecutable ./eww-bar/modules/ping.sh;
+    "eww/modules/bluetooth.sh" = makeExecutable ./eww-bar/modules/bluetooth.sh;
+  };
+}
+</file>
+
+<file path="home-manager/niri/config.nix">
+{ config, pkgs, lib, ... }:
+
+{
+  xdg.configFile = {
+    "niri/config.kdl".source = ./config.kdl;
+    "niri/window-focus.kdl".source = ./window-focus.kdl;
+  };
+}
+</file>
+
+<file path="home-manager/niri/start.sh">
+eww open-many bar win0
+</file>
+
+<file path="home-manager/niri/window-focus.kdl">
+binds {
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+//это ну окошко двигать
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+}
+</file>
+
+<file path="home-manager/other/fastfetch.nix">
+{ pkgs, ... }: { 
+
+  xdg.configFile."fastfetch/config.jsonc".text = ''
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "modules": [
+    "title", "host",
+    "separator",
+    "os",
+    "kernel",
+    "shell",
+    "packages",
+    "separator",
+    "uptime",
+                {
+            "type": "command",
+            "key": "OS Age",
+            "text":"birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
+        },
+    "de",
+    "wm",
+    "terminal",
+    "separator",
+    "cpu",
+    "gpu",
+    "memory",
+    "display",
+    "battery",
+    "separator",
+    "swap",
+    "disk",
+    "colors",
+
+  ]
+}
+  '';
+
+xdg.configFile."fastfetch/config-minimal.jsonc".text = ''
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "modules": [
+    "title", "host",
+    "os",
+    "kernel",
+    "packages",
+    "uptime",
+                {
+            "type": "command",
+            "key": "OS Age",
+            "text":"birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
+        },
+    "de",
+    "wm",
+    "cpu",
+    "gpu",
+    "memory",
+    
+  ]
+}
+  '';
+}
+</file>
+
+<file path="home-manager/other/hyprlock.nix">
+{ config, pkgs, lib, ... }:{
+
+  programs.hyprlock = {
+    enable = true;
+    
+    settings = {
+      background = {
+        monitor = "";
+        path = "/home/flaemer/wallpaper/wallpaper.png";
+        blur_passes = "2";
+        contrast = "1";
+        brightness = "0.5";
+        vibrancy = "0.2";
+        vibrancy_darkness = 0.2;
+};
+      input-field = {
+        monitor = "";
+        size = "300, 75";
+        outline_thickness = "2";
+        dots_size = "0.2"; 
+        dots_spacing = "0.55"; 
+        dots_center = "true";
+        outer_color = "rgba(255, 255, 255, 0)";
+        inner_color = "rgba(255, 255, 255, 0.2)";
+        font_color = "$foreground"
+        fade_on_empty = "false";
+        rounding = "30";
+        check_color = "rgb(204, 136, 34)";
+        placeholder_text = "<i><span foreground=";
+        hide_input = "false";
+        position = "0, -200";
+        halign = "center";
+        valign = "center";
+};
+      general {
+        no_fade_in = "true";
+        no_fade_out = "true";
+        hide_cursor = "false";
+        grace = "0";
+        disable_loading_bar = "true";
+};
+      label {
+        monitor = "";
+        text = "cmd[update:1000] echo "$(date +"%A, %B %d")"";
+        color = "rgba(242, 243, 244, 0.75)";
+        font_size = "22";
+        font_family = "JetBrains Mono";
+        position = "0, 300";
+        halign = "center";
+        valign = "center";
+};
+      label {
+        monitor = "";
+        text = "cmd[update:1000] echo "$(date +"%-I:%M")";
+        color = "rgba(242, 243, 244, 0.75)";
+        font_size = "95";
+        font_family = "JetBrains Mono Extrabold";
+        position = "0, 200";
+        halign = "center";";
+        valign = "center";
+};
+}
+</file>
+
+<file path="home-manager/other/kitty.nix">
+{
+	programs.kitty = {
+		enable = true;
+	
+	font.size = 12;
+	
+	font.name = "Monaco";	
+
+	settings = {
+		shell = "fish";
+		confirm_os_window_close = "0";
+		window_margin_width = 10;
+		foreground = "#f8f8f2";
+		background =  "#101010";
+		cursor = "#f8f8f2";
+		color0 = "#21222c";	
+		color1 = "#ff5555";
+		color2 = "#50fa7b";
+		color3 = "#f1fa8c";
+		color4 = "#6272a4";
+		color5 = "#ff79c6";
+		color6 = "#8be9fd";
+		color7 = "#f8f8f2";
+		color8 = "#6272a4";
+		color9 = "#ff5555";
+		color10 = "#50fa7b";
+		color11 = "#f1fa8c";
+		color12 = "#6272a4";
+		color13 = "#ff79c6";
+		color14 = "#8be9fd";
+		color15 = "#ffffff";
+
+	};
+};
+
+}
+</file>
+
+<file path="home-manager/other/mangohud.nix">
+{ config, pkgs, ... }: {
+  programs.mangohud = {
+    enable = true;
+    settings = {
+      legacy_layout = false;
+      position = "top-left";
+      swap = true;
+      ram = true;
+      cpu_stats = true;
+      cpu_temp = true;
+      cpu_name = true;
+      vram = true;
+      gpu_stats = true;
+      gpu_temp = true;
+      gpu_name = true;
+      fps = true;
+      frame_timing = 1;
+      background_alpha = "0.4";
+    };
+  };
+}
+</file>
+
+<file path="home-manager/other/themes.nix">
+{pkgs, ...}: {
+  gtk = {
+    enable = true;
+
+    theme = {
+      package = pkgs.flat-remix-gtk;
+      name = "Flat-Remix-GTK-White-Darkest-Solid";
+    };
+
+    iconTheme = {
+      package = pkgs.papirus-icon-theme;
+      name = "Papirus-Dark";
+    };
+
+#    font = {
+#      name = "Sans";
+#      size = 11;
+#    };
+  };
+}
+</file>
+
+<file path="home-manager/rofi/rofi.nix">
+{ config, pkgs, lib, ... }:{
+  programs.rofi = {
+    enable = true;
+    theme = "hi"; 
+  };
+  xdg.configFile = {
+    "rofi/themes/hi.rasi".source = ./rofi.rasi;
+  };
+}
+</file>
+
+<file path="home-manager/rofi/rofi.rasi">
+* {
+    font:   "Montserrat 12";
+
+    bg0:     #00000099;
+    bg1:     #0000004D;
+    bg2:     #cba6f799;
+
+    fg0:     #FFFFFF;
+    fg1:     #FFFFFF;
+    fg2:     #FFFFFF;
+
+    background-color:   transparent;
+    text-color:         @fg0;
+
+    margin:     0;
+    padding:    0;
+    spacing:    0;
+}
+configuration {
+	modi:                       "drun";
+    show-icons:                 true;
+    display-drun:               "";
+	drun-display-format:        "{name}";
+    icon-theme: "Papirus";	
+    drun-display-format: "{name}";
+    sort: true;   
+    sorting-method: "fzf";
+}
+element-icon {
+    size: 96px; 
+}
+window {
+    background-color:   @bg0;
+
+    location:       center;
+    width:          640;
+    border-radius:  8;
+}
+
+inputbar {
+    font:       "Montserrat 20";
+    padding:    6px;
+    spacing:    6px;
+    children:   [ icon-search, entry ];
+}
+
+icon-search {
+    expand:     false;
+    filename:   "search";
+    size: 28px;
+}
+
+icon-search, entry, element-icon, element-text {
+    vertical-align: 0.5;
+}
+
+entry {
+    font:   inherit;
+
+    placeholder         : "Search";
+    placeholder-color   : @fg2;
+}
+
+message {
+    border:             2px 0 0;
+    border-color:       @bg1;
+    background-color:   @bg1;
+}
+
+textbox {
+    padding:    8px 24px;
+}
+
+listview {
+    lines:      8;
+    columns:    2;
+
+    fixed-height:   false;
+    border:         1px 0 0;
+    border-color:   @bg1;
+}
+
+element {
+    padding:            8px 16px;
+    spacing:            16px;
+    background-color:   transparent;
+}
+
+element normal active {
+    text-color: @bg2;
+}
+
+element alternate active {
+    text-color: @bg2;
+}
+
+element selected normal, element selected active {
+    background-color:   @bg2;
+    text-color:         @fg1;
+}
+
+element-icon {
+    size:   1em;
+}
+
+element-text {
+    text-color: inherit;
+}
+</file>
+
+<file path="pkgs/packages-cli-notebook.nix">
+{ pkgs, ...}:{
+environment.systemPackages = with pkgs; [
+wirelesstools
+yt-dlp
+nix-prefetch-github
+];
+}
+</file>
+
+<file path="pkgs/packages-cli.nix">
+{ pkgs, ...}:{
+environment.systemPackages = with pkgs; [
+git
+wget
+btop
+zapret
+home-manager
+smartmontools
+
+appimage-run
+android-tools
+ntfs3g
+exfat
+
+fastfetch 
+wireplumber
+
+playerctl
+brightnessctl
+
+ffmpeg
+
+pciutils
+usbutils
+lm_sensors
+
+polkit
+
+networkmanager
+bluez
+
+zip
+unzip
+
+vulkan-tools
+vulkan-loader
+clinfo
+radeontop
+libva-utils
+vdpauinfo
+libvdpau-va-gl
+libva
+];
+}
+</file>
+
+<file path="pkgs/packages-fonts.nix">
+{ pkgs, ...}:{
+fonts.packages = with pkgs; [
+        noto-fonts
+        noto-fonts-cjk-sans
+        noto-fonts-color-emoji
+        liberation_ttf
+        fira-code
+        fira-code-symbols
+        mplus-outline-fonts.githubRelease
+        dina-font
+        proggyfonts
+        meslo-lgs-nf
+        adwaita-fonts
+        nerd-fonts.symbols-only
+        nerd-fonts.adwaita-mono
+  ];
+}
+</file>
+
+<file path="pkgs/packages-servermaybe.nix">
+{ pkgs, ...}:{
+environment.systemPackages = with pkgs; [
+nano
+btop
+ffmpeg
+pciutils
+lm_sensors
+usbutils
+libva-utils
+vdpauinfo 
+libva 
+libvdpau-va-gl
+smartmontools
+];
+}
+</file>
+
+<file path="pkgs/wlcontrol.nix">
+{ pkgs ? import <nixpkgs> { } }:
+
+pkgs.rustPlatform.buildRustPackage rec {
+  pname = "wlcontrol";
+  version = "unstable-2024-05-14"; 
+
+  src = pkgs.fetchFromGitHub {
+    owner = "neoden";
+    repo = "wlcontrol";
+    rev = "master"; 
+    hash = "sha256-qFbvRDff5dUR7xg2KmwNeuCYelFtfWz7CAaK/mu81Vg="; 
+  };
+
+  cargoHash = "sha256-O+vAFIXu1t9DRdT6uhTv5IQjt+SGbnbHzMmE07RCWs0=";
+
+  nativeBuildInputs = with pkgs; [
+    pkg-config
+    blueprint-compiler
+    wrapGAppsHook4 
+  ];
+
+  buildInputs = with pkgs; [
+    gtk4
+    libadwaita
+    glib
+    dbus
+    gdk-pixbuf
+  ];
+
+  meta = with pkgs.lib; {
+    description = "WiFi and Bluetooth control app for Linux, built with GTK4/libadwaita";
+    homepage = "https://github.com/neoden/wlcontrol";
+    license = licenses.mit;
+    platforms = platforms.linux;
+    mainProgram = "wlcontrol";
+  };
+}
+</file>
+
+<file path="programs/programs.nix">
+{ config, lib, pkgs, ... }: {
+
+  programs = {
+    chromium.enable = true;
+    mtr.enable = true;
+    niri.enable = true;
+    
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    
+    steam = {
+      enable = true;
+      package = pkgs.steam.override {
+        extraArgs = "-system-composer"; 
+      };   
+      
+      remotePlay.openFirewall = true;
+      gamescopeSession.enable = true;
+      dedicatedServer.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+    };
+  };
+}
+</file>
+
+<file path="services/gonic.nix">
+{ config, pkgs, lib, ... }: {
+  services.gonic = {
+    enable = true;
+    settings = {
+      music-path = [ "/idkselfhost/Music" ];
+      podcast-path = [ "/var/lib/gonic/podcasts" ];
+      playlists-path = [ "/var/lib/gonic/playlists" ];
+      cache-path = "/var/lib/gonic/cache";
+      listen-addr = "0.0.0.0:4040";
+    };
+  };
+}
+</file>
+
+<file path="services/Memos.nix">
+{ config, pkgs, ... }:
+
+{
+  services.memos = {
+    enable = true;
+    settings = {
+      MEMOS_PORT = "7000";
+      MEMOS_ADDR = "0.0.0.0";
+            MEMOS_DATA = "/var/lib/memos"; 
+    };
+  };
+}
+</file>
+
+<file path="services/notebook-services.nix">
+{ config, pkgs, lib, ... }: {
+  services = {
+    
+    undervolt = {
+      enable = true;
+      coreOffset = -95;
+      gpuOffset = -60;
+    };
+
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    
+    thermald.enable = true;
+  };
+}
+</file>
+
+<file path="services/openssh.nix">
+{ config, pkgs, lib, ... }: {
+  services.openssh = {
+        enable = true;
+        settings = {
+            PermitRootLogin = "yes";
+            PasswordAuthentication = true; 
+      };
+    };
+  }
+</file>
+
+<file path="services/Photoview.nix">
+{ config, pkgs, unstable-pkgs, ... }:
+
+{
+  imports = [
+    "${unstable-pkgs.path}/nixos/modules/services/web-apps/photoview.nix"
+  ];
+
+  services.photoview = {
+    enable = true;
+    package = unstable-pkgs.photoview;
+    host = "0.0.0.0"; 
+    port = 8080;
+    database = {
+      type = "sqlite";
+    };
+    mediaPath = "/idkselfhost/UmmidkPinterestMaybe"; 
+    settings = {
+      disableFaceRecognition = false; # пример из твоего списка
+      disableVideoEncoding = false;
+    };
+  };
+}
+</file>
+
+<file path="services/printer.nix">
+{ config, pkgs, lib, ... }: {
+  services = {
+    printing.enable = true;
+    printing.webInterface = true;
+
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      nssmdns6 = true;      
+      openFirewall = true; 
+          publish = {
+      enable = true;
+      userServices = true;
+    };
+  };
+
+    printing.drivers = [
+      pkgs.brlaser
+      pkgs.gutenprint 
+    ];
+  };
+}
+</file>
+
+<file path="services/services.nix">
+{ config, pkgs, lib, ... }: {
+  services = {
+    gvfs.enable = true;
+    devmon.enable = true;
+    udisks2.enable = true;
+    displayManager.ly.enable = true;
+    flatpak.enable = true;
+    blueman.enable = true;
+
+    pipewire = {
+      enable = true;
+      alsa = { enable = true; support32Bit = true; };
+      audio.enable = true;
+      pulse.enable = true;
+      jack.enable = true;
+      wireplumber.enable = true;
+
+      extraConfig.pipewire = {
+        "92-low-latency".context.properties = {
+          "default.clock.rate" = 48000;
+          "default.clock.allowed-rates" = [ 44100 48000 88200 96000 ];
+          "default.clock.min-quantum" = 512;
+          "default.clock.quantum" = 4096;
+          "default.clock.max-quantum" = 8192;
+        };
+      };
+    };
+  };
+
+  systemd.user.services.polkit-gnome-authentication-agent-1 = {
+    description = "Polkit GNOME Authentication Agent";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+  };
+}
+</file>
+
+<file path="services/zram.nix">
+{ config, pkgs, lib, ... }: { 
+  zramSwap = {
+    enable = true;
+    priority = 100;
+    algorithm = "zstd";
+    memoryPercent = 100; 
+  };
+}
+</file>
+
+<file path="zapret/zapret.nix">
+{ pkgs, ... }:
+let
+  files = "/etc/zapret"; 
+  BIN = "${files}/bin/";  
+  LISTS = "${files}/lists/";
+  GameFilter = "1024-65535";
+in
+{
+  networking.firewall.extraCommands = ''
+    ip46tables -t mangle -I POSTROUTING -p tcp -m multiport --dports 80,443,2053,2083,2087,2096,8443,1025:65535 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:9 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
+    ip46tables -t mangle -I POSTROUTING -p tcp -m multiport --dports 80,443,2053,2083,2087,2096,8443,1025:65535 -m connbytes --connbytes-dir=reply --connbytes-mode=packets --connbytes 1:3 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
+    ip46tables -t mangle -A POSTROUTING -p udp -m multiport --dports 443,19294:19344,50000:50100,1025:65535 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:9 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
+  '';
+
+  systemd.services.zapret = {
+    enable = true;
+    description = "DPI bypass service";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ]; 
+    serviceConfig = {
+      ExecStart = ''
+        ${pkgs.zapret}/bin/nfqws --pidfile=/run/nfqws.pid --qnum=200 \
+          --filter-udp=443 --hostlist="${LISTS}zapret-hosts-user.txt" --dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-fake-quic="${BIN}quic_initial_www_google_com.bin" --new \
+          --filter-udp=19294-19344,50000-50100 --filter-l7=discord,stun --dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-fake-quic="${BIN}quic_initial_www_google_com.bin" --new \
+          --filter-tcp=80,443,2053,2083,2087,2096,8443 --hostlist="${LISTS}zapret-hosts-user.txt" --dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-fooling=ts --dpi-desync-fake-tls="${BIN}tls_clienthello_www_google_com.bin" --new \
+          --filter-tcp=80,443,1024-65535 --ipset="${LISTS}ipset-game.txt" --dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-fooling=ts --dpi-desync-fake-tls="${BIN}tls_clienthello_4pda_to.bin" --new \
+          --filter-udp=1024-65535 --ipset="${LISTS}ipset-game.txt" --dpi-desync=fake --dpi-desync-autottl=2 --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp="${BIN}quic_initial_www_google_com.bin" --dpi-desync-cutoff=n2
+      '';
+      Type = "simple";
+      Restart = "always";
+    };
+  };
+}
+</file>
+
+<file path="hardware-pc.nix">
+hi i don't know hardware config for pc
+</file>
+
+<file path="hardware-server.nix">
+{ config, lib, pkgs, modulesPath, ... }:{
+imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+];
+
+boot = { 
+    initrd.availableKernelModules = [ "xhci_pci" "ahci" "ehci_pci" "usbhid" "usb_storage" "sd_mod" "rtsx_usb_sdmmc" ];
+    kernelModules = [ "kvm-amd" ];
+    kernel.sysctl = {
+        "vm.dirty_writeback_centisecs" = 6000;
+        "vm.dirty_expire_centisecs" = 6000;
+        "vm.dirty_ratio" = 40;
+        "vm.dirty_background_ratio" = 10;
+    };
+};
+
+fileSystems."/" = { 
+    device = "/dev/disk/by-label/ServerRoot";
+    fsType = "ext4";
+    options = [ "noatime" "nodiratime""errors=remount-ro""commit=60" ];   
+};
+
+fileSystems."/boot" = {
+    device = "/dev/disk/by-label/EFI";
+    fsType = "vfat";
+    options = [ "fmask=0022" "dmask=0022" ];
+};
+
+fileSystems."/idkselfhost" = { 
+    device = "/dev/disk/by-label/idkselfhost";
+    fsType = "ext4";
+    options = [ "noatime" "nodiratime""errors=remount-ro""commit=60" ];   
+};
+
+swapDevices = [ ];
+hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}
+</file>
+
+<file path="home-manager/niri/config.kdl">
+include "window-focus.kdl"
+
+input {
+    keyboard {
+    xkb {
+    layout "us,ru"
+    options "grp:alt_shift_toggle"
+}
+numlock
+}   
+
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 
+touchpad {
+ tap
+ 
+ drag true
+ natural-scroll 
+ accel-speed 0.6
+ scroll-factor 1
+ scroll-method "edge"
+ scroll-button 273
+ tap-button-map "left-middle-right"
+ click-method "clickfinger"
+ }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 
+mouse {
+     middle-emulation
+     natural-scroll
+}
+}
+
+
+//Monitors да да это мониторы
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+output "eDP-1" {
+    mode  "1366x768@60"
+    scale 1
+    background-color "#003300"
+    backdrop-color "#1F1717"
+    transform "normal"
+    focus-at-startup
+    position x=0 y=0
+
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+output "HDMI-A-1" {
+    mode "1360x768@60.015"
+    scale 1
+    background-color "#003300"
+    backdrop-color "#1F1717"
+    transform "normal"
+    position x=0 y=-768
+}
+
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+layout {
+    gaps 14
+    center-focused-column "never"
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+focus-ring {
+    width 2
+    active-color "#bac2de"
+    inactive-color "#bac2de"
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+struts {
+     left -22
+     right -12
+     top -14
+     bottom -8
+}
+}
+
+//спавны ну там да
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
+spawn-at-startup "aw-server"
+spawn-at-startup "awatcher"
+spawn-at-startup "sh" "-c" "awww-daemon & awww img ~/nix/home-manager/wallpaper/wolf"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "eww daemon"
+spawn-sh-at-startup "~/nix/home-manager/niri/start.sh"
+
+//енвиронмент
+environment {
+    DISPLAY ":0"
+    QT_QPA_PLATFORM "wayland"
+}
+ overview {
+    zoom 0.8
+    workspace-shadow {
+    off
+}
+}
+// виндоу рулес
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+window-rule {
+    match app-id="kitty"
+    match app-id="chromium-browser"       
+    match app-id="lite-xl"
+    match app-id="vesktop"
+    match app-id="org.gnome.gThumb"
+    match app-id="com.github.flaemer.gapless"
+    match app-id="org.vinegarhq.Sober"
+    match title="Steam Settings"
+    match title="io.github.kukuruzka165.materialgram"
+open-maximized true
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+window-rule {
+    match app-id="steam"
+    open-focused false //пашол он в сраку мраз бесит оно мусор его
+}
+
+window-rule {
+    clip-to-geometry true
+    geometry-corner-radius 8
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+window-rule {
+        match is-active=false
+        opacity 0.95
+}
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+// бинды
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+// Запуск программ 
+	Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "kitty" "fish"; }
+    Mod+Shift+Return hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-show" "drun" "-theme-str" "element-icon { size: 3.0ch; }"; }
+    Mod+E hotkey-overlay-title="Run a File Manager: Nautilus" { spawn "nautilus" "--new-window"; }  
+    Mod+B hotkey-overlay-title="Run Chromium" { spawn "chromium"; } 
+    Alt+Q hotkey-overlay-title="Run Text Editor: Lite-xl " { spawn "lite-xl"; }
+    Mod+G { spawn "sh" "-c" "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"; }
+   
+    Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; } // Я если честно незнаю стоит ли его добавлять типо по идее да стоит он запускает hyprlock но по идее это не должно быть а должно как отдельное быть ибо она локскрин незнаю как сказать типо зачем надо его к аппсам хотя блен незнаю незнаю ну ладно добавлю типо потому что потому потому что выбор словно нет я хз короче отдельную секцю не стоит же делать зачем я пишу это вообще опять же не понимаю
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+    
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+// Fn кнопки 
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioNext { spawn "playerctl" "next"; }
+    XF86AudioPlay  { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev  { spawn "playerctl" "previous"; }
+    XF86MonBrightnessUp { spawn "brightnessctl" "set" "5%+"; }
+    XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
+// Типо Fn кнопки но без Fn короче что делает Fn но без Fn кнопок поняли?
+    Mod+ctrl+Page_Up allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    Mod+ctrl+Page_Down allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    Mod+ctrl+End allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    Mod+shift+Page_Down { spawn "playerctl" "next"; }
+    Mod+shift+End { spawn "playerctl" "play-pause"; }
+    Mod+shift+Page_Up { spawn "playerctl" "previous"; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+
+    Mod+Tab repeat=true { toggle-overview; }
+    Mod+Q { close-window; }
+    
+    Alt+Down  { focus-window-down; }
+    Alt+Up    { focus-window-up; }
+
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Home { focus-column-first; }
+    Mod+End  { focus-column-last; }
+    Mod+alt+Home { move-column-to-first; }
+    Mod+alt+End  { move-column-to-last; }
+
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+// Фокус окна ну хз   
+    Mod+Down      { focus-workspace-down; }
+    Mod+Up        { focus-workspace-up; }
+    Mod+Right     { focus-column-right; }
+    Mod+Left      { focus-column-left; }
+// Перемещение окна ну хз клавиатурой
+    Mod+alt+Down { move-column-to-workspace-down; }
+    Mod+alt+Up { move-column-to-workspace-up; }
+    Mod+alt+right { move-column-right; }
+    Mod+alt+left { move-column-left; }
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+    Mod+WheelScrollDown      cooldown-ms=80 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=80 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=80 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=80 { move-column-to-workspace-up; }
+
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    
+
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+M { maximize-column; }
+    Mod+Z { fullscreen-window; }
+    mod+shift+f       { toggle-windowed-fullscreen; }
+    
+    Mod+Ctrl+F { expand-column-to-available-width; }
+
+    Mod+C { center-column; }
+
+    // Center all fully visible columns on screen.
+    Mod+Ctrl+C { center-visible-columns; }
+
+    Mod+Minus { set-column-width "-5%"; }
+    Mod+Equal { set-column-width "+5%"; }
+
+    // Finer height adjustments when in column with other windows.
+    Mod+Shift+Minus { set-window-height "-5%"; }
+    Mod+Shift+Equal { set-window-height "+5%"; }
+
+    // Move the focused window between the floating and the tiling layout.
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+
+    // Toggle tabbed column display mode.
+    // Windows in this column will appear as vertical tabs,
+    // rather than stacked on top of each other.
+    Mod+W { toggle-column-tabbed-display; }
+
+    Print { screenshot; }
+    Shift+Print { screenshot-screen; }
+    Ctrl+Print { screenshot-window; }
+
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+P { power-off-monitors; }
+
+}
+</file>
+
+<file path="programs/wayfire.nix">
+{ config, pkgs, ... }:
+
+{
+  programs.wayfire = {
+    enable = true;
+    plugins = with pkgs.wayfirePlugins; [
+      wayfire-plugins-extra
+      wcm
+    ];
+  };
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+}
+</file>
+
+<file path="services/jellyfin.nix">
+{ config, pkgs, lib, ... }: {
+  services.jellyfin = {
+      enable = true;
+      openFirewall = true;
+  };
+}
+</file>
+
+<file path="hardware-notebook.nix">
+{ config, lib, pkgs, modulesPath, ... }:{
+imports = [ 
+    (modulesPath + "/installer/scan/not-detected.nix") 
+];
+
+boot = { 
+  kernelModules = [ "kvm-intel" "i915" "amdgpu" ];
+  initrd = {
+    availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
+    supportedFilesystems = [ "vfat" "ext4" ];
+};
+
+  kernelParams = [
+    "intel_pstate=passive" 
+    "iommu=pt" 
+    "radeon.cik_support=0" "amdgpu.cik_support=1"
+    "radeon.si_support=0" "amdgpu.si_support=1"
+    "amdgpu.dc=1" "amdgpu.dpm=1"
+    "amdgpu.ppfeaturemask=0xffffffff"
+  ];
+};
+
+fileSystems = {
+  "/" = {
+    device = "/dev/disk/by-label/NixosRoot";
+    fsType = "ext4";
+    options = [ "noatime" "nodiratime" "discard" "errors=remount-ro" ];
+  };
+  "/boot" = {
+    device = "/dev/disk/by-label/EFI";
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
+  };
+
+  "/home" = {
+    device = "/dev/disk/by-label/hi";
+    fsType = "ext4";
+    options = [ "noatime" "nodiratime" "discard" "errors=remount-ro" ];
+  };
+};
+
+networking.useDHCP = lib.mkDefault true;  
+hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}
+</file>
+
+<file path="home.nix">
+{ config, pkgs, ... }: {
+    home = {
+            username = "flaemer";
+            homeDirectory = "/home/flaemer";
+            stateVersion = "25.11";
+            
+        }; 
+          
+	imports = [
+		./home-manager/niri/config.nix
+		./home-manager/other/kitty.nix
+		./home-manager/other/fastfetch.nix
+    ./home-manager/other/themes.nix
+    ./home-manager/other/mangohud.nix
+		./home-manager/rofi/rofi.nix
+		./home-manager/eww/eww.nix
+
+		./home-manager/desktop/AdoptMe.nix
+		./home-manager/desktop/Gearworks.nix	
+	];
+  
+programs.fish = {
+enable = true;
+shellAliases = 
+let
+	flakePath = "/home/flaemer/nix/";
+in {
+rebuild = "sudo nixos-rebuild switch --flake /home/flaemer/nix#nixos"; #ребилд системы
+home-switch = "home-manager switch --flake ${flakePath}"; #ребилд хоума ну замена чистка короче хоум менеджер
+nix-clean = "sudo nix-collect-garbage -d"; # чистка от старого
+nix-shell = "nix-shell -p"; # никс шелл это
+nixos-update = "nixos-rebuild switch --upgrade"; # обнова
+nix-update = "sudo nix-channel --update && flatpak update --user"; # абнова никпгс и флатпак апсов
+fastfetch-minimal = "fastfetch --config /home/flaemer/.config/fastfetch/config-minimal.jsonc"; # минимал фаст фетч
+histgrep = "history | grep ";
+icat = "kitten icat ";
+		};
+	};         
+}
+</file>
+
+<file path="pkgs/fine.nix">
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  desktop-file-utils,
+  gitUpdater,
+  gobject-introspection,
+  gst_all_1,
+  gtk4,
+  libadwaita,
+  meson,
+  ninja,
+  pkg-config,
+  vala,
+  wrapGAppsHook4,
+  libsoup_3,
+  json-glib, 
+}:
+stdenv.mkDerivation (finalAttrs: {
+  pname = "gapless";
+  version = "67";
+  
+src = fetchFromGitHub {
+    githubBase = "codeberg.org";
+    owner = "flaemer";
+    repo = "g4music-flaemer";
+    rev = "main";
+    hash = "sha256-WMD1Fx1oAlFlALh7Ov9kJW4xj16usaelgs7PxuLaZBs=";
+  };
+
+
+  
+  nativeBuildInputs = [
+    desktop-file-utils
+    gobject-introspection
+    meson
+    ninja
+    pkg-config
+    vala
+    wrapGAppsHook4
+    libsoup_3
+    json-glib
+  ];
+
+  buildInputs = [
+    gtk4
+    libadwaita
+  ]
+  ++ (with gst_all_1; [
+    gst-plugins-bad
+    gst-plugins-base
+    gst-plugins-good
+    gstreamer
+    
+  ]);
+
+  passthru.updateScript = gitUpdater {
+    rev-prefix = "v";
+  };
+})
+</file>
+
+<file path="pkgs/packages-notebook.nix">
+{ pkgs, ...}:{
+environment.systemPackages = with pkgs; [
+mcomix
+#libreoffice-qt6
+krita
+lmms
+kdePackages.kdenlive
+obsidian
+antimicrox
+
+snapshot
+qbittorrent
+#paper-plane
+kid3
+simple-scan
+sane-backends
+
+qemu
+moonlight-qt
+
+intel-gpu-tools
+intel-compute-runtime
+intel-media-driver
+
+vscodium
+hydrus
+python3
+
+scrcpy
+localsend
+godot_4
+gnome-clocks
+appstream
+luajit
+  ddcutil
+  ddcui
+  tldr
+  cheat
+  file
+  eza
+  ripgrep
+  fd
+  imv
+];
+}
+</file>
+
+<file path="pkgs/packages.nix">
+#packages for me
+{ pkgs, ...}:{
+environment.systemPackages = with pkgs; [
+
+polkit_gnome 
+file-roller
+
+mako
+eww
+xwayland-satellite
+
+#themes bro
+adwaita-qt
+#papirus-icon-theme
+material-design-icons
+material-icons
+    morewaita-icon-theme
+awatcher 
+activitywatch
+nautilus
+
+#internetik
+chromium
+vesktop
+materialgram
+
+lite-xl
+
+
+#это ну работа не фейк да да у меня нет ее ну медиа музыка видео там
+obs-studio
+mpv
+
+#программы ну для вм всяких
+rofi
+
+#терминал и терминальное
+kitty
+awww
+cliphist
+wl-clipboard
+luajit 
+
+#гамес ого какая кнопочка №№№ № № № №№ №№№  
+gamemode 
+mangohud
+gamescope
+#steam-run
+umu-launcher
+ # возможно сделать отдельным конфигом под спорные ибо ну спорные много зависимостей и ненужны
+ # типо зачем мне вайн на пк где мне лишь зайти в игру и все надо бы порт протон или чего нить найти
+ # или скрипт под протон
+ # я чет не нашел а уже 4 декабря почти а именно 3 декабря 20;55 пишу в это время
+#wineWowPackages.waylandFull
+#winetricks
+
+blueman
+pwvucontrol
+gnome-disk-utility
+pamixer
+    ktorrent
+#  (callPackage ./wlcontrol.nix { })
+  (callPackage ./fine.nix { })
+];
+}
+</file>
+
+<file path="user/user.nix">
+{ pkgs, ...}: {
+  users.users = {
+    flaemer = {
+     isNormalUser = true;
+     extraGroups = [ "wheel" "audio" "video" "disk" "lp" "network" "input" "uinput" "networkmanager" "plugdev" "jellyfin" "render" "adbuser" "docker" "libvirtd" "kvm" ]; 
+     packages = with pkgs; [ tree ];	
+   }; 
+   
+    diddy = { 
+      isNormalUser = true;
+      description = "ummeggsyeaheggstrueeggsln11,col55";
+      extraGroups = [ "audio" "video" "networkmanager" "plugdev" "input" "render" "adbuser" "uinput" ];
+    };
+};    
+       time = {
+        timeZone = "Asia/Krasnoyarsk";
+        hardwareClockInLocalTime = true;
+    };
+ }
+</file>
+
+<file path="configuration.nix">
+{ config, lib, pkgs, ... }: {
+  imports = [
+    #./hardware-pc.nix                 #для пк    
+    ./hardware-notebook.nix           #для ноута
+
+    ./pkgs/packages-fonts.nix         #fonts btw
+    ./pkgs/packages-cli.nix           #основные пакеты кли
+    ./pkgs/packages.nix               #основные пакеты
+
+    ./pkgs/packages-cli-notebook.nix  #доп пакеты ноут которые не нужны серверу или пк
+    ./pkgs/packages-notebook.nix      #доп пакеты ноут которые не нужны серверу или пк
+    ./services/notebook-services.nix  #для ноута сервисы которые не нужны или не возможны для других
+    #./programs/wayfire.nix
+
+    ./services/printer.nix            #принтер 
+    ./services/services.nix           #ужасные сервисы
+    ./zapret/zapret.nix               #zapret btw
+    ./user/user.nix                   #юзеры
+    
+    ./programs/programs.nix           #сам хз зачем нужно
+    ./Plasma.nix
+    ./services/zram.nix               #Zram патриотическая озу
+    ./services/openssh.nix            #SSH вот такое да
+
+
+    #./pkgs/packages-servermaybe.nix   #пакеты серверу
+    #./hardware-server.nix             #для сервера
+    #./services/jellyfin.nix           #jellyfin личный
+    # ./services/gonic.nix              #музыка gonic
+    #./services/Photoview.nix          #photoview хочу как личный пинтерест
+    ./services/Memos.nix              #Memos заметки личный
+    ./services/Komga.nix              #Манго тролфейс
+  ];
+
+  security.polkit.enable = true;
+  fonts.fontDir.enable = true;
+
+  nix = {
+    settings.trusted-users = [ "root" "flaemer" ];
+    settings.experimental-features = [ "nix-command" "flakes" ];
+  };
+
+  nixpkgs = {
+    hostPlatform = lib.mkDefault "x86_64-linux";
+    config = {
+      allowUnsupportedSystem = true;
+      allowUnfree = true;
+    };
+  };
+
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    supportedFilesystems = [ "nfs" ];
+    kernel.sysctl = { "vm.max_map_count" = 262144; };
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+      timeout = 1;
+    };
+  };
+
+  environment = {
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      GDK_BACKEND = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+    };
+    variables = {
+      LANG = "en_US.UTF-8";
+      LC_ALL = "en_US.UTF-8";
+      LC_CTYPE = "en_US.UTF-8";
+    };
+  };
+
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;  
+    networkmanager.dns = "none";
+    nameservers = [
+      "185.37.37.37"
+      "185.37.39.39"
+    ];
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        22    # SSH
+        2005  # незнаю roblox?
+        4040  # Gonic
+        5050  # kavita
+        8040
+        5900  # VNC
+        7000  # Memos заметки шо 
+        8000  # Images
+        8080  # Photoview
+        8096  # Jellyfin
+        47984 47989 48010 # Sunshine / Moonlight 
+        64989 # хз
+      ];
+
+      allowedUDPPorts = [
+        2005  # хз
+        5353  # хз
+        64989 # хз
+      ];
+
+      allowedUDPPortRanges = [
+        { from = 47998; to = 48010; }
+      ];
+    };
+  };
+
+  hardware = {
+    i2c.enable = true;
+    uinput.enable = true;
+    enableRedistributableFirmware = true;
+    steam-hardware.enable = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [ mesa mesa-demos ];
+    };
+    bluetooth = {
+      package = pkgs.bluez;
+      powerOnBoot = true;
+      enable = true;
+      settings = { 
+        General = {
+          ClassicBondedOnly = false;
+          Enable = "Source,Sink,Media,Socket,Input";
+          UserspaceHID = true;
+        }; 
+      };
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome
+    ];
+  };
+  
+virtualisation.docker.enable = true;
+virtualisation.libvirtd.enable = true;
+programs.virt-manager.enable = true;
+
+  system.stateVersion = "26.05";
+}
+</file>
+
+<file path="flake.lock">
+{
+  "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780361225,
+        "narHash": "sha256-wnV9ttf4fPWNonBIQmvlrSlNpQYgx5HgWWd007mwIFA=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "e28654b71096e08c019d4861ca26acb646f583d8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "release-26.05",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1780203844,
+        "narHash": "sha256-K5sT4jTpGs15ADhviMKNBH38REpPf5Q6mM1+N6cArVE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "b51242d7d43689db2f3be91bd05d5b24fbb469c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1780243769,
+        "narHash": "sha256-x5UQuRsH3MqI0U9afaXSNqzTPSeZlRLvFAav2Ux1pNw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "331800de5053fcebacf6813adb5db9c9dca22a0c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-unstable": "nixpkgs-unstable"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
+</file>
+
+<file path="flake.nix">
+{
+  description = "my first flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
+    let
+      system = "x86_64-linux";
+      unstable-pkgs = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true; 
+      };
+    in
+    {
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit unstable-pkgs; }; 
+        modules = [ ./configuration.nix ];
+      };
+
+      homeConfigurations.flaemer = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        modules = [ ./home.nix ];
+      };
+    };
+}
+</file>
+
+</files>

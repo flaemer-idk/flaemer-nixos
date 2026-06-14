@@ -1,10 +1,17 @@
-{ config, lib, pkgs, ... }: {
+{ config, pkgs, ... }:
 
-programs.wayfire = {
+{
+  programs.wayfire = {
     enable = true;
     plugins = with pkgs.wayfirePlugins; [
-      wf-shell   # Панель и обои
       wayfire-plugins-extra
+      wcm
     ];
+  };
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 }

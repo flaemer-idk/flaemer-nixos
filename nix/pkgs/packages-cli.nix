@@ -29,6 +29,9 @@ polkit
 networkmanager
 bluez
 
+zip
+unzip
+
 vulkan-tools
 vulkan-loader
 clinfo

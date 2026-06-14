@@ -11,13 +11,12 @@ xwayland-satellite
 
 #themes bro
 adwaita-qt
-arc-theme
 #papirus-icon-theme
 material-design-icons
 material-icons
-
-  awatcher 
-    activitywatch
+    morewaita-icon-theme
+awatcher 
+activitywatch
 nautilus
 
 #internetik
@@ -37,11 +36,10 @@ rofi
 
 #терминал и терминальное
 kitty
-wl-clipboard
-swww
+awww
 cliphist
-
-hyprlock
+wl-clipboard
+luajit 
 
 #гамес ого какая кнопочка №№№ № № № №№ №№№  
 gamemode 
@@ -53,14 +51,16 @@ umu-launcher
  # типо зачем мне вайн на пк где мне лишь зайти в игру и все надо бы порт протон или чего нить найти
  # или скрипт под протон
  # я чет не нашел а уже 4 декабря почти а именно 3 декабря 20;55 пишу в это время
-wineWowPackages.waylandFull
-winetricks
+#wineWowPackages.waylandFull
+#winetricks
 
 blueman
 pwvucontrol
 gnome-disk-utility
 pamixer
-(callPackage /home/flaemer/nix/pkgs/fine.nix { })
+    ktorrent
+#  (callPackage ./wlcontrol.nix { })
+  (callPackage ./fine.nix { })
 ];
 }   
 

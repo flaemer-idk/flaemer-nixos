@@ -1,14 +1,16 @@
 { pkgs, ...}:{
 environment.systemPackages = with pkgs; [
 mcomix
-libreoffice-qt6
+#libreoffice-qt6
 krita
 lmms
 kdePackages.kdenlive
+obsidian
+antimicrox
 
 snapshot
 qbittorrent
-paper-plane
+#paper-plane
 kid3
 simple-scan
 sane-backends
@@ -20,18 +22,24 @@ intel-gpu-tools
 intel-compute-runtime
 intel-media-driver
 
-  meson
-  ninja
-  vala
-  pkg-config
-  gtk4
-  libadwaita
-  gobject-introspection
-  desktop-file-utils
-  gst_all_1.gstreamer
-  gst_all_1.gst-plugins-base
-  gst_all_1.gst-plugins-good
-  gst_all_1.gst-plugins-bad
+vscodium
+hydrus
+python3
 
+scrcpy
+localsend
+godot_4
+gnome-clocks
+appstream
+luajit
+  ddcutil
+  ddcui
+  tldr
+  cheat
+  file
+  eza
+  ripgrep
+  fd
+  imv
 ];
 }

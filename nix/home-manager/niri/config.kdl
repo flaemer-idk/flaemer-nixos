@@ -80,9 +80,11 @@ struts {
 prefer-no-csd
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 spawn-at-startup "aw-server"
 spawn-at-startup "awatcher"
-spawn-at-startup "sh" "-c" "swww-daemon & swww img ~/nix/home-manager/wallpaper/wolf"
+spawn-at-startup "sh" "-c" "awww-daemon & awww img ~/nix/home-manager/wallpaper/wolf"
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "eww daemon"
 spawn-sh-at-startup "~/nix/home-manager/niri/start.sh"
@@ -140,6 +142,8 @@ binds {
     Mod+E hotkey-overlay-title="Run a File Manager: Nautilus" { spawn "nautilus" "--new-window"; }  
     Mod+B hotkey-overlay-title="Run Chromium" { spawn "chromium"; } 
     Alt+Q hotkey-overlay-title="Run Text Editor: Lite-xl " { spawn "lite-xl"; }
+    Mod+G { spawn "sh" "-c" "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"; }
+   
     Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; } // Я если честно незнаю стоит ли его добавлять типо по идее да стоит он запускает hyprlock но по идее это не должно быть а должно как отдельное быть ибо она локскрин незнаю как сказать типо зачем надо его к аппсам хотя блен незнаю незнаю ну ладно добавлю типо потому что потому потому что выбор словно нет я хз короче отдельную секцю не стоит же делать зачем я пишу это вообще опять же не понимаю
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
     
@@ -218,7 +222,7 @@ binds {
     Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
     Mod+M { maximize-column; }
-    Mod+F { fullscreen-window; }
+    Mod+Z { fullscreen-window; }
     mod+shift+f       { toggle-windowed-fullscreen; }
     
     Mod+Ctrl+F { expand-column-to-available-width; }

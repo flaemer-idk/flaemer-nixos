@@ -1,1 +1,1 @@
-/nix/store/8wqf9b8rcls1wa59xiy341knymfwy18q-home-manager-files/.config/eww/modules/battery.sh
+/nix/store/pn2rm8cc61nflpsqxnqjcd77m8p4bd7a-home-manager-files/.config/eww/modules/battery.sh
