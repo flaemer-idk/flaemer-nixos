@@ -6,7 +6,7 @@
   }; 
           
   imports = [
-    ./home-manager/niri/config.nix
+#    ./home-manager/niri/config.nix
     ./home-manager/other/kitty.nix
     ./home-manager/other/fastfetch.nix
     ./home-manager/other/themes.nix
@@ -14,9 +14,7 @@
     ./home-manager/rofi/rofi.nix
     ./home-manager/eww/eww.nix
 
-    ./home-manager/desktop/AdoptMe.nix
-    ./home-manager/desktop/Gearworks.nix	
+#    ./home-manager/desktop/AdoptMe.nix
+#    ./home-manager/desktop/Gearworks.nix	
   ];
-
-  # Здесь больше нет упоминаний fish и алиасов — всё ушло в систему
 }

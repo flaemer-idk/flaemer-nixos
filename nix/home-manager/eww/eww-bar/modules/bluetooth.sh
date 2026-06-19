@@ -1,1 +1,7 @@
-/nix/store/pn2rm8cc61nflpsqxnqjcd77m8p4bd7a-home-manager-files/.config/eww/modules/bluetooth.sh
+#!/usr/bin/env bash
+
+if bluetoothctl info | grep -q "Connected: yes"; then
+    echo "󰂱"
+else
+    echo "󰂲"о
+fi

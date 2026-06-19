@@ -1,1 +1,13 @@
-/nix/store/pn2rm8cc61nflpsqxnqjcd77m8p4bd7a-home-manager-files/.config/eww/modules/player.sh
+#!/bin/sh
+
+
+echo "{\"show\": \"no\", \"content\": \"\"}"
+playerctl --follow metadata --format '{{artist}} ¿¿¿¿¿ {{ title }}' 2> /dev/null | while read -r line ; do 
+   case "$line" in
+     ?*\ ¿¿¿¿¿\ ?*) text="$(echo "$line" | sed "s/¿¿¿¿¿/-/")" && should_show="yes";;
+     *) text="" && should_show="no" ;;
+  esac
+
+  echo "{\"show\": \"$should_show\", \"content\": \"(box (label :text \\\"$text\\\"))\"}"
+done 
+

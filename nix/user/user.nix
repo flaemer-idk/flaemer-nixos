@@ -1,4 +1,4 @@
-  { pkgs, ...}: {
+{ pkgs, ...}: {
   users.users = {
     flaemer = {
      isNormalUser = true;
@@ -11,11 +11,6 @@
       description = "ummeggsyeaheggstrueeggsln11,col55";
       extraGroups = [ "audio" "video" "networkmanager" "plugdev" "input" "render" "adbuser" "uinput" ];
     };
-};    
-       time = {
-        timeZone = "Asia/Krasnoyarsk";
-        hardwareClockInLocalTime = true;
-    };
- }
-
- 
+  
+  };   
+}

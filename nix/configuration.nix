@@ -1,15 +1,17 @@
 { config, lib, pkgs, ... }: {
   imports = [
-    #./hardware-pc.nix                 #для пк    
-    ./hardware-notebook.nix           #для ноута
+    ./hardware.nix                    #
+
+    ./hardware-pc.nix                 #для пк    
+    #./hardware-notebook.nix           #для ноута
 
     ./pkgs/packages-fonts.nix         #fonts btw
     ./pkgs/packages-cli.nix           #основные пакеты кли
     ./pkgs/packages.nix               #основные пакеты
 
-    ./pkgs/packages-cli-notebook.nix  #доп пакеты ноут которые не нужны серверу или пк
-    ./pkgs/packages-notebook.nix      #доп пакеты ноут которые не нужны серверу или пк
-    ./services/notebook-services.nix  #для ноута сервисы которые не нужны или не возможны для других
+    #./pkgs/Laptop/packages-cli-notebook.nix  #доп пакеты ноут которые не нужны серверу или пк
+    #./pkgs/Laptop/packages-notebook.nix      #доп пакеты ноут которые не нужны серверу или пк
+    #./services/notebook-services.nix  #для ноута сервисы которые не нужны или не возможны для других
     #./programs/wayfire.nix
 
     ./services/printer.nix            #принтер 
@@ -26,11 +28,11 @@
 
     #./pkgs/packages-servermaybe.nix   #пакеты серверу
     #./hardware-server.nix             #для сервера
-    #./services/jellyfin.nix           #jellyfin личный
-    # ./services/gonic.nix              #музыка gonic
-    #./services/Photoview.nix          #photoview хочу как личный пинтерест
-    ./services/Memos.nix              #Memos заметки личный
-    ./services/Komga.nix              #Манго тролфейс
+     #./services/Server/jellyfin.nix           #jellyfin личный
+    #./services/Server/gonic.nix              #музыка gonic
+    #./services/Server/Photoview.nix          #photoview хочу как личный пинтерест
+    #./services/Server/Memos.nix              #Memos заметки личный
+    #./services/Server/Komga.nix              #Манго тролфейс
   ];
 
   security.polkit.enable = true;
@@ -50,7 +52,7 @@
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_6_18;
     supportedFilesystems = [ "nfs" ];
     kernel.sysctl = { "vm.max_map_count" = 262144; };
     loader = {
@@ -63,6 +65,8 @@
   environment = {
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
+        RADV_PERFTEST = "nggc"; 
+          mesa_glthread = "true";
       GDK_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
     };
@@ -110,30 +114,6 @@
     };
   };
 
-  hardware = {
-    i2c.enable = true;
-    uinput.enable = true;
-    enableRedistributableFirmware = true;
-    steam-hardware.enable = true;
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-      extraPackages = with pkgs; [ mesa mesa-demos ];
-    };
-    bluetooth = {
-      package = pkgs.bluez;
-      powerOnBoot = true;
-      enable = true;
-      settings = { 
-        General = {
-          ClassicBondedOnly = false;
-          Enable = "Source,Sink,Media,Socket,Input";
-          UserspaceHID = true;
-        }; 
-      };
-    };
-  };
-
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
@@ -141,10 +121,15 @@
       xdg-desktop-portal-gnome
     ];
   };
-  
-virtualisation.docker.enable = true;
-virtualisation.libvirtd.enable = true;
-programs.virt-manager.enable = true;
+
+  time = {
+    timeZone = "Asia/Krasnoyarsk";
+    hardwareClockInLocalTime = true;
+ };
+
+#virtualisation.docker.enable = true;
+#virtualisation.libvirtd.enable = true;
+#programs.virt-manager.enable = true;
 
   system.stateVersion = "26.05";
 }

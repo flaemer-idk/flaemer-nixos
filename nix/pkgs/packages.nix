@@ -58,9 +58,9 @@ blueman
 pwvucontrol
 gnome-disk-utility
 pamixer
-    ktorrent
-#  (callPackage ./wlcontrol.nix { })
-  (callPackage ./fine.nix { })
+#    ktorrent
+#  (callPackage ./Custom/wlcontrol.nix { })
+  (callPackage ./Custom/g4music.nix { })
 ];
 }   
 
