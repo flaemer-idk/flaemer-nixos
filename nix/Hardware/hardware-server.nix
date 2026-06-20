@@ -4,6 +4,7 @@ imports = [
 ];
 
 boot = { 
+    kernelPackages = pkgs.linuxPackages_latest;
     initrd.availableKernelModules = [ "xhci_pci" "ahci" "ehci_pci" "usbhid" "usb_storage" "sd_mod" "rtsx_usb_sdmmc" ];
     kernelModules = [ "kvm-amd" ];
     kernel.sysctl = {
@@ -17,7 +18,7 @@ boot = {
 fileSystems."/" = { 
     device = "/dev/disk/by-label/ServerRoot";
     fsType = "ext4";
-    options = [ "noatime" "nodiratime""errors=remount-ro""commit=60" ];   
+    options = [ "noatime" "nodiratime" "errors=remount-ro" "commit=60" ];   
 };
 
 fileSystems."/boot" = {
@@ -29,7 +30,7 @@ fileSystems."/boot" = {
 fileSystems."/idkselfhost" = { 
     device = "/dev/disk/by-label/idkselfhost";
     fsType = "ext4";
-    options = [ "noatime" "nodiratime""errors=remount-ro""commit=60" ];   
+    options = [ "noatime" "nodiratime" "errors=remount-ro" "commit=60" ];   
 };
 
 swapDevices = [ ];

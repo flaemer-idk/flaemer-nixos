@@ -24,8 +24,7 @@ chromium
 vesktop
 materialgram
 
-lite-xl
-
+#lite-xl # gone gone thank you
 
 #это ну работа не фейк да да у меня нет ее ну медиа музыка видео там
 obs-studio

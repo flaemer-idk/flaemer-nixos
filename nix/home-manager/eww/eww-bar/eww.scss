@@ -40,39 +40,6 @@ $crust: #11111b;
   border-radius: 2px;
   font-family: "Adwaita Sans";
   font-weight: 600
-  // Цвета для сети
-.network {
-  &.wifi { color: $green; }
-  &.ethernet { color: $blue; }
-  &.no-internet { color: $yellow; }
-  &.disconnected { color: $red; }
-}
-
-// Стили для списка задач
-.task-btn {
-  background: $легендаУзбекистана;
-  margin: 4px;
-  padding: 8px 0;
-  border-radius: 8px;
-  color: $foreground;
-  font-size: 14px;
-  &:hover {
-    background: $surface0;
-    border: 1px solid $cyan;
-  }
-}
-
-// Стили для Power Menu
-.popup {
-  background-color: $легендаУзбекистана;
-  padding: 10px;
-  border-radius: 12px;
-  button {
-    font-size: 25px;
-    padding: 5px;
-    &:hover { color: $red; }
-  }
-}
 }
 window {
   background: transparent;
@@ -87,7 +54,6 @@ window {
 .player {
   background: $легендаУзбекистана;
   margin: 9px;
-  color: $text;
   padding: 6px;
   font-size: 18px;
 }
@@ -98,8 +64,8 @@ window {
 
 .speaker {
   background: $легендаУзбекистана;
-  margin: 9px;
   padding: 6px;
+  margin: 0px;
   font-size: 18px;
 }
 

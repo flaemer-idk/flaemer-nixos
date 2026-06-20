@@ -1,16 +1,17 @@
 { pkgs, ...}:{
 environment.systemPackages = with pkgs; [
-mcomix
+#mcomix #i never used this but why i downloading this always i newer used this like app no i hate this app
 #libreoffice-qt6
 krita
-lmms
+reaper
 kdePackages.kdenlive
-obsidian
+obsidian 
 antimicrox
 
-snapshot
-qbittorrent
-#paper-plane
+#snapshot # my webcam is gone gone / thank you and i't newer worked yeah
+#qbittorrent # umm bye bye i don't like you
+fragments # better torrent maybe 
+#paper-plane ##maintein yeah something is gone or something i don't know and no updates yeah
 kid3
 simple-scan
 sane-backends

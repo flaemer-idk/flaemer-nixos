@@ -25,7 +25,7 @@ src = fetchFromGitHub {
     owner = "flaemer";
     repo = "g4music-flaemer";
     rev = "main";
-    hash = "sha256-WMD1Fx1oAlFlALh7Ov9kJW4xj16usaelgs7PxuLaZBs=";
+    hash = "sha256-Rqt8pQhodu3xG1Nk/6XuGDw4K3GGSE+eAjgul8VzhSA=";
   };
 
 

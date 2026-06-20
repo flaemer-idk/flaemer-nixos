@@ -5,6 +5,7 @@ imports = [
 
 boot = { 
   kernelModules = [ "kvm-intel" "i915" "amdgpu" ];
+  kernelPackages = pkgs.linuxPackages_zen;
   initrd = {
     availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
     supportedFilesystems = [ "vfat" "ext4" ];
@@ -27,7 +28,7 @@ fileSystems = {
     options = [ "noatime" "nodiratime" "discard" "errors=remount-ro" ];
   };
   "/boot" = {
-    device = "/dev/disk/by-label/EFI";
+    device = "/dev/disk/by-uuid/C140-1CAE";
     fsType = "vfat";
     options = [ "fmask=0077" "dmask=0077" ];
   };
@@ -37,6 +38,12 @@ fileSystems = {
     fsType = "ext4";
     options = [ "noatime" "nodiratime" "discard" "errors=remount-ro" ];
   };
+  
+  "/idkselfhost" = { 
+    device = "/dev/disk/by-label/idkselfhost";
+    fsType = "ext4";
+    options = [ "noatime" "nodiratime""errors=remount-ro""commit=60" ];   
+};
 };
 
 networking.useDHCP = lib.mkDefault true;  

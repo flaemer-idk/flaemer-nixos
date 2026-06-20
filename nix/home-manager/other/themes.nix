@@ -1,30 +1,36 @@
-{ pkgs, ... }:
+{ pkgs, ... }: {
+  # Включаем dconf, без него libadwaita/GTK4 в не-GNOME окружениях игнорирует темную тему
+  dconf.enable = true;
 
-{
-  # Жестко фиксируем GTK тему, чтобы Plasma не перехватывала управление
   gtk = {
     enable = true;
+
+    # adw-gtk3-dark сделает ТЕМНЫМИ старые GTK3 приложения (типа REAPER, LMMS, Inkscape)
     theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
+      package = pkgs.adw-gtk3;
+      name = "adw-gtk3-dark";
     };
+
     iconTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
+      package = pkgs.morewaita-icon-theme;
+      name = "MoreWaita";
+    };
+
+    # Принудительно заставляем старый софт темнеть
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
     };
   };
 
-  # Заставляем Qt-приложения (типа VLC, OBS и т.д.) использовать qt5ct/qt6ct вместо плагинов KDE
-  home.sessionVariables = {
-    QT_QPA_PLATFORM = "wayland";
-    QT_QPA_PLATFORMTHEME = "qt5ct"; 
+  # Это САМЫЙ важный блок. Он включает нативную темную Libadwaita для всего нового софта (GTK4)
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      icon-theme = "MoreWaita";
+    };
   };
-
-  # Добавляем утилиты конфигурации, чтобы если что, докрутить внешний вид руками
-  home.packages = with pkgs; [
-    qt5ct
-    qt6ct
-    libsForQt5.breeze-qt5 # если захочешь тему Breeze, но без самой Plasma
-    kdePackages.breeze    # для Qt6
-  ];
 }
+

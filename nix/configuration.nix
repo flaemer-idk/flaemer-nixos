@@ -1,38 +1,39 @@
 { config, lib, pkgs, ... }: {
   imports = [
-    ./hardware.nix                    #
+    ./Hardware/hardware.nix                    #Base hardware for everyone
+    #./Hardware/hardware-pc.nix                 #для пк    
+    ./Hardware/hardware-notebook.nix           #для ноута
 
-    ./hardware-pc.nix                 #для пк    
-    #./hardware-notebook.nix           #для ноута
+    ./pkgs/packages-fonts.nix                  #fonts btw
+    ./pkgs/packages-cli.nix                    #основные пакеты кли
+    ./pkgs/packages.nix                        #основные пакеты
 
-    ./pkgs/packages-fonts.nix         #fonts btw
-    ./pkgs/packages-cli.nix           #основные пакеты кли
-    ./pkgs/packages.nix               #основные пакеты
+    ./pkgs/Laptop/packages-cli-notebook.nix    #доп пакеты ноут которые не нужны серверу или пк
+    ./pkgs/Laptop/packages-notebook.nix        #доп пакеты ноут которые не нужны серверу или пк
+    ./Services/notebook-services.nix           #для ноута сервисы которые не нужны или не возможны для других
+    #./programs/wayfire.nix                     #Wayfire
 
-    #./pkgs/Laptop/packages-cli-notebook.nix  #доп пакеты ноут которые не нужны серверу или пк
-    #./pkgs/Laptop/packages-notebook.nix      #доп пакеты ноут которые не нужны серверу или пк
-    #./services/notebook-services.nix  #для ноута сервисы которые не нужны или не возможны для других
-    #./programs/wayfire.nix
-
-    ./services/printer.nix            #принтер 
-    ./services/services.nix           #ужасные сервисы
-    ./zapret/zapret.nix               #zapret btw
-    ./user/user.nix                   #юзеры
+    ./Services/Printer.nix                     #принтер 
+    ./Services/services.nix                    #ужасные сервисы
+    ./Zapret/zapret.nix                        #zapret btw
+    ./User/User.nix                            #юзеры
     
-    ./programs/programs.nix           #сам хз зачем нужно
-    ./Plasma.nix
-    ./fish.nix
-    ./services/zram.nix               #Zram патриотическая озу
-    ./services/openssh.nix            #SSH вот такое да
+    ./programs/programs.nix                    #сам хз зачем нужно
+    #./Plasma.nix                               #Kde plasma
+    ./fish.nix                                 #Fish for everyone
+    
+    ./Services/zram.nix                        #Zram патриотическая озу
+    ./Services/openssh.nix                     #SSH вот такое да
 
 
-    #./pkgs/packages-servermaybe.nix   #пакеты серверу
-    #./hardware-server.nix             #для сервера
-     #./services/Server/jellyfin.nix           #jellyfin личный
-    #./services/Server/gonic.nix              #музыка gonic
-    #./services/Server/Photoview.nix          #photoview хочу как личный пинтерест
-    #./services/Server/Memos.nix              #Memos заметки личный
-    #./services/Server/Komga.nix              #Манго тролфейс
+    #./pkgs/packages-servermaybe.nix            #пакеты серверу
+    #./Hardware/hardware-server.nix             #для сервера
+
+    #./Services/Server/Jellyfin.nix             #jellyfin личный
+    #./Services/Server/Gonic.nix                #музыка gonic
+    #./Services/Server/Photoview.nix            #photoview хочу как личный пинтерест
+    ./Services/Server/Memos.nix                #Memos заметки личный
+    #./Services/Server/Komga.nix                #Манго тролфейс
   ];
 
   security.polkit.enable = true;
@@ -52,9 +53,8 @@
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_18;
     supportedFilesystems = [ "nfs" ];
-    kernel.sysctl = { "vm.max_map_count" = 262144; };
+    kernel.sysctl = { "vm.max_map_count" = 262144; };   #For docker umm tubearchivist yeah
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -65,8 +65,6 @@
   environment = {
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
-        RADV_PERFTEST = "nggc"; 
-          mesa_glthread = "true";
       GDK_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
     };
@@ -99,18 +97,15 @@
         8080  # Photoview
         8096  # Jellyfin
         47984 47989 48010 # Sunshine / Moonlight 
-        64989 # хз
+        64989 # хз роблокс вроде да
       ];
 
       allowedUDPPorts = [
-        2005  # хз
-        5353  # хз
-        64989 # хз
+        2005  # хз роблокс вроде да
+        5353  # хз роблокс вроде да
+        64989 # хз роблокс вроде да
       ];
-
-      allowedUDPPortRanges = [
-        { from = 47998; to = 48010; }
-      ];
+      allowedUDPPortRanges = [ { from = 47998; to = 48010; } ];
     };
   };
 
@@ -126,10 +121,6 @@
     timeZone = "Asia/Krasnoyarsk";
     hardwareClockInLocalTime = true;
  };
-
-#virtualisation.docker.enable = true;
-#virtualisation.libvirtd.enable = true;
-#programs.virt-manager.enable = true;
 
   system.stateVersion = "26.05";
 }

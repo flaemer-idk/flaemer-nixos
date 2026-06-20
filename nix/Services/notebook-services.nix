@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }: {
   services = {
-    
+    power-profiles-daemon.enable = false;
+    throttled = {
+      enable = true;
+    };
+
     undervolt = {
       enable = true;
       coreOffset = -95;
@@ -21,6 +25,6 @@
       };
     };
     
-    thermald.enable = true;
+    thermald.enable = false;
   };
 }
