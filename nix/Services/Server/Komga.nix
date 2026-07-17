@@ -1,6 +1,10 @@
-{ config, pkgs, lib, ... }: {
-  services.komga = {
+{ pkgs, ... }: {
+  services.kavita = {
     enable = true;
-    port = 8040;
+
+    settings = {
+      IpAddresses = "0.0.0.0";
+      Port = 5050;
+    };
   };
 }

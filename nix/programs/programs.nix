@@ -9,6 +9,8 @@
       enable = true;
       enableSSHSupport = true;
     };
+    dconf.enable = true;
+
     
     steam = {
       enable = true;

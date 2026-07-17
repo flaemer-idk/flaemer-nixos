@@ -1,7 +1,7 @@
 { pkgs, ...}:{
 environment.systemPackages = with pkgs; [
 wirelesstools
-yt-dlp
+#yt-dlp
 nix-prefetch-github
 ];
 }

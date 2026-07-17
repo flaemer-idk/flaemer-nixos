@@ -32,13 +32,14 @@
     #./Services/Server/Jellyfin.nix             #jellyfin личный
     #./Services/Server/Gonic.nix                #музыка gonic
     #./Services/Server/Photoview.nix            #photoview хочу как личный пинтерест
-    ./Services/Server/Memos.nix                #Memos заметки личный
-    #./Services/Server/Komga.nix                #Манго тролфейс
+    #./Services/Server/Memos.nix                #Memos заметки личный
+    #./Services/Server/Kavita.nix               #Манго тролфейс
+    #./Services/Server/Cockpit.nix		          #Типоуправлять смотреть
+    #./Services/Server/
   ];
 
   security.polkit.enable = true;
   fonts.fontDir.enable = true;
-
   nix = {
     settings.trusted-users = [ "root" "flaemer" ];
     settings.experimental-features = [ "nix-command" "flakes" ];
@@ -90,12 +91,13 @@
         2005  # незнаю roblox?
         4040  # Gonic
         5050  # kavita
-        8040
+        8040  #хз кто найди его
         5900  # VNC
         7000  # Memos заметки шо 
         8000  # Images
         8080  # Photoview
         8096  # Jellyfin
+        9090  # cockpitпанельда
         47984 47989 48010 # Sunshine / Moonlight 
         64989 # хз роблокс вроде да
       ];

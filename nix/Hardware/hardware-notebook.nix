@@ -4,8 +4,9 @@ imports = [
 ];
 
 boot = { 
-  kernelModules = [ "kvm-intel" "i915" "amdgpu" ];
+  kernelModules = [ "kvm-intel" "i915" ];
   kernelPackages = pkgs.linuxPackages_zen;
+  blacklistedKernelModules = [ "radeon" "amdgpu" ];
   initrd = {
     availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
     supportedFilesystems = [ "vfat" "ext4" ];
@@ -14,10 +15,6 @@ boot = {
   kernelParams = [
     "intel_pstate=passive" 
     "iommu=pt" 
-    "radeon.cik_support=0" "amdgpu.cik_support=1"
-    "radeon.si_support=0" "amdgpu.si_support=1"
-    "amdgpu.dc=1" "amdgpu.dpm=1"
-    "amdgpu.ppfeaturemask=0xffffffff"
   ];
 };
 
@@ -38,14 +35,10 @@ fileSystems = {
     fsType = "ext4";
     options = [ "noatime" "nodiratime" "discard" "errors=remount-ro" ];
   };
-  
-  "/idkselfhost" = { 
-    device = "/dev/disk/by-label/idkselfhost";
-    fsType = "ext4";
-    options = [ "noatime" "nodiratime""errors=remount-ro""commit=60" ];   
 };
-};
-
+services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{device}=="0x6900", ATTR{power/control}="auto", ATTR{remove}="1"
+  '';
 networking.useDHCP = lib.mkDefault true;  
 hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

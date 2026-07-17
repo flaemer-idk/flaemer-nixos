@@ -7,6 +7,8 @@ let
 in
 {
   networking.firewall.extraCommands = ''
+    ip46tables -t mangle -I OUTPUT -p tcp -m multiport --dports 80,443,2053,2083,2087,2096,8443,1025:65535 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:9 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
+    ip46tables -t mangle -I POSTROUTING -p tcp -m multiport --dports 80,443,2053,2083,2087,2096,8443,1025:65535 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:9 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
     ip46tables -t mangle -I POSTROUTING -p tcp -m multiport --dports 80,443,2053,2083,2087,2096,8443,1025:65535 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:9 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
     ip46tables -t mangle -I POSTROUTING -p tcp -m multiport --dports 80,443,2053,2083,2087,2096,8443,1025:65535 -m connbytes --connbytes-dir=reply --connbytes-mode=packets --connbytes 1:3 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
     ip46tables -t mangle -A POSTROUTING -p udp -m multiport --dports 443,19294:19344,50000:50100,1025:65535 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:9 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
