@@ -1,88 +1,88 @@
 { lib
 , stdenv
-, fetchFromGitHub
+, meson
+, ninja
 , pkg-config
-, wayland-scanner
+, vala
 , wrapGAppsHook4
-, glib # <- Добавили сюда для утилиты glib-compile-schemas
+, glib
 , gtk4
 , libadwaita
-, gtk4-layer-shell
-, upower
-, wireplumber
 , json-glib
+, gtk4-layer-shell
+, wireplumber
 , networkmanager
 , libpulseaudio
-, wayland-protocols
 , wayland
-, pipewire
-, gsettings-desktop-schemas
-, dconf
+, upower
+, wayland-protocols
+, fetchFromGitHub
 }:
 
 stdenv.mkDerivation rec {
   pname = "way-shell";
-  version = "0.0.10";
-
+  version = "6.7";
   src = fetchFromGitHub {
-    owner = "ldelossa";
-    repo = "way-shell";
-    rev = "main"; # <- Переключаемся на свежую ветку с поддержкой Niri
-    hash = "sha256-qAGhlkquiByrVq5Z0pXNzY0XoEOB9eCyaGm1d9Nv3q0="; # <- Временная заглушка
+    githubBase = "codeberg.org"; # Указываем Codeberg вместо GitHub
+    owner = "flaemer";
+    repo = "way-shell-maybeforkflaemer";
+    rev = "main"; # Имя ветки
+    # Хэш для ветки main от 19 июля 2026 (коммит cfb1c7cedc)
+    hash = "sha256-LeuWavVb0/fu0D9nE08HcU8ZqmlZ1GTdEkLCdHqOKrU="; 
   };
 
+
   nativeBuildInputs = [
+    meson
+    ninja
     pkg-config
-    wayland-scanner
+    vala
     wrapGAppsHook4
-    glib # <- Добавили сюда, чтобы Nix мог скомпилировать схемы при сборке
+    glib
   ];
 
   buildInputs = [
     glib
     gtk4
     libadwaita
-    gtk4-layer-shell
-    upower
-    wireplumber
     json-glib
+    gtk4-layer-shell
+    wireplumber
     networkmanager
     libpulseaudio
-    wayland-protocols
     wayland
-    pipewire
-    gsettings-desktop-schemas
-    dconf
+    upower
+    wayland-protocols
   ];
 
-  makeFlags = [ "PREFIX=$(out)" ];
+  mesonFlags = [
+    "-Db_lto=true"          
+    "-Dstrip=true"         
+    "-Db_ndebug=true"       
+  ];
 
-  postPatch = ''
-    if grep -q "gtk4-layer-shell-0" Makefile && ! grep -q "libpipewire" Makefile; then
-      substituteInPlace Makefile \
-        --replace-fail "gtk4-layer-shell-0" "gtk4-layer-shell-0 libpipewire-0.3"
-    fi
+  NIX_CFLAGS_COMPILE = [
+    "-O3"                 
+    "-march=native"         
+    "-flto"                   
+  ];
+    postInstall = ''
+    mkdir -p $out/share/glib-2.0/schemas
+    cp -r $src/data/*.gschema.xml $out/share/glib-2.0/schemas/
+    glib-compile-schemas $out/share/glib-2.0/schemas/
   '';
 
-  # НОВЫЙ БЛОК: Гарантируем правильную установку и компиляцию GSettings-схем
-  postInstall = ''
-    # Создаем папку для схем в нашем изолированном пути $out
-    mkdir -p $out/share/glib-2.0/schemas
-    
-    # Если Makefile не скопировал схему в правильное место, копируем ее вручную из исходников
-    if [ ! -f $out/share/glib-2.0/schemas/org.ldelossa.way-shell.gschema.xml ]; then
-      find . -name "org.ldelossa.way-shell.gschema.xml" -exec cp {} $out/share/glib-2.0/schemas/ \;
-    fi
-    
-    # Компилируем схему в бинарный формат gschemas.compiled
-    glib-compile-schemas $out/share/glib-2.0/schemas
+  preFixup = ''
+    gappsWrapperArgs+=(
+      --prefix XDG_DATA_DIRS : "$out/share"
+      --set ADW_DEBUG_COLOR_SCHEME "prefer-dark" # Твоя переменная для темной темы
+    )
   '';
 
   meta = with lib; {
-    description = "A Gnome-like shell for wayland compositors";
-    homepage = "https://github.com/ldelossa/way-shell";
+    description = "Lightweight Wayland shell for Niri";
+    homepage = "https://codeberg.org/flaemer/way-shell-maybeforkflaemer";
     license = licenses.gpl2Only;
     platforms = platforms.linux;
-    mainProgram = "way-shell";
   };
 }

@@ -60,7 +60,7 @@ pamixer
 #    ktorrent
 #  (callPackage ./Custom/wlcontrol.nix { })
   (callPackage ./Custom/g4music.nix { })
-#  (callPackage ./Custom/way-shell.nix { })
+  (callPackage ./Custom/way-shell.nix { })
 ];
 }   
 
