@@ -6,7 +6,6 @@ polkit_gnome
 file-roller
 
 mako
-eww
 xwayland-satellite
 
 #themes bro
@@ -21,8 +20,6 @@ nautilus
 
 #internetik
 chromium
-vesktop
-materialgram
 
 #lite-xl # gone gone thank you
 
@@ -57,8 +54,8 @@ blueman
 pwvucontrol
 gnome-disk-utility
 pamixer
-#    ktorrent
-#  (callPackage ./Custom/wlcontrol.nix { })
+
+  (callPackage ./Custom/rbxdclient.nix { })
   (callPackage ./Custom/g4music.nix { })
   (callPackage ./Custom/way-shell.nix { })
 ];

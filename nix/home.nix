@@ -18,7 +18,6 @@
 		./home-manager/desktop/AdoptMe.nix
 		./home-manager/desktop/Gearworks.nix	
 	];
-  services.arrpc.enable = true;
 programs.fish = {
 enable = true;
 shellAliases = 

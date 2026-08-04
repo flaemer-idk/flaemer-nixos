@@ -21,7 +21,7 @@
     ./programs/programs.nix                    #сам хз зачем нужно
     #./Plasma.nix                               #Kde plasma
     ./fish.nix                                 #Fish for everyone
-    
+    ./mango-go.nix
     ./Services/zram.nix                        #Zram патриотическая озу
     ./Services/openssh.nix                     #SSH вот такое да
 
@@ -37,7 +37,7 @@
     #./Services/Server/Cockpit.nix		          #Типоуправлять смотреть
     #./Services/Server/
   ];
-
+#virtualisation.docker.enable = true;
   security.polkit.enable = true;
   fonts.fontDir.enable = true;
   nix = {
