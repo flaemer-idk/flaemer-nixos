@@ -86,7 +86,6 @@ spawn-at-startup "aw-server"
 spawn-at-startup "awatcher"
 spawn-at-startup "sh" "-c" "awww-daemon & awww img ~/nix/home-manager/wallpaper/wolf"
 spawn-at-startup "xwayland-satellite"
-spawn-at-startup "eww daemon"
 spawn-sh-at-startup "~/nix/home-manager/niri/start.sh"
 
 //енвиронмент
