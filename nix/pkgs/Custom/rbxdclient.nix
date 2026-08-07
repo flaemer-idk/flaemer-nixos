@@ -1,3 +1,4 @@
+# default.nix (для клиента rbxdclient)
 { lib
 , stdenv
 , meson
@@ -17,12 +18,12 @@
 , umu-launcher
 , cage
 , makeWrapper
-, procps
+, fetchFromGitHub
 }:
 
 let
-  # python для rfd
-  rfd-python = python3.withPackages (ps: with ps; [
+  # Сборка Python с необходимыми пакетами для RFD
+  my-python = python3.withPackages (ps: with ps; [
     pygobject3
     websocket-client
     requests
@@ -37,14 +38,12 @@ stdenv.mkDerivation {
   pname = "rbxdclient";
   version = "1.0.0";
 
-  src = fetchFromGitea {
-    domain = "codeberg.org";
-    owner = "flaemer";
+  src = fetchFromGitHub {
+    owner = "flaemer-idk";
     repo = "rbxdclient";
-    rev = "main";
-    hash = "sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=";
+    rev = "main"; 
+    hash = "sha256-y2ZLTcGssxwyfGL10OpR/I1Uy/1+gDkdu7xe//PdZm8="; # Пустой хэш
   };
-
 
   nativeBuildInputs = [
     meson
@@ -68,7 +67,7 @@ stdenv.mkDerivation {
 
   postInstall = ''
     wrapProgram $out/bin/rbxdclient \
-      --prefix PATH : ${lib.makeBinPath [ rfd-python umu-launcher cage procps ]}
+      --prefix PATH : ${lib.makeBinPath [ my-python umu-launcher cage ]}
 
     mkdir -p $out/share/applications
     cat > $out/share/applications/io.codeberg.flaemer.rbxdclient.desktop <<EOF

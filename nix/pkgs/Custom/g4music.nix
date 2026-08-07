@@ -20,12 +20,11 @@ stdenv.mkDerivation (finalAttrs: {
   pname = "gapless";
   version = "67";
   
-src = fetchFromGitHub {
-    githubBase = "codeberg.org";
-    owner = "flaemer";
+  src = fetchFromGitHub {
+    owner = "flaemer-idk";
     repo = "g4music-flaemer";
-    rev = "main";
-    hash = "sha256-Rqt8pQhodu3xG1Nk/6XuGDw4K3GGSE+eAjgul8VzhSA=";
+    rev = "main"; 
+    hash = "sha256-Rqt8pQhodu3xG1Nk/6XuGDw4K3GGSE+eAjgul8VzhSA="; 
   };
 
 

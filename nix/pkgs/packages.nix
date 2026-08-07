@@ -1,9 +1,10 @@
 #packages for me
 { pkgs, ...}:{
 environment.systemPackages = with pkgs; [
-
+#libreoffice-qt 
 polkit_gnome 
 file-roller
+fragments
 
 mako
 xwayland-satellite
@@ -17,7 +18,7 @@ material-icons
 awatcher 
 activitywatch
 nautilus
-
+vscodium
 #internetik
 chromium
 
@@ -54,8 +55,8 @@ blueman
 pwvucontrol
 gnome-disk-utility
 pamixer
-
   (callPackage ./Custom/rbxdclient.nix { })
+  (callPackage ./Custom/rbxdserver.nix { })
   (callPackage ./Custom/g4music.nix { })
   (callPackage ./Custom/way-shell.nix { })
 ];

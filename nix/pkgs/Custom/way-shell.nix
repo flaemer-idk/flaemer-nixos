@@ -23,11 +23,9 @@ stdenv.mkDerivation rec {
   pname = "way-shell";
   version = "6.7";
   src = fetchFromGitHub {
-    githubBase = "codeberg.org"; # Указываем Codeberg вместо GitHub
-    owner = "flaemer";
-    repo = "way-shell-maybeforkflaemer";
-    rev = "main"; # Имя ветки
-    # Хэш для ветки main от 19 июля 2026 (коммит cfb1c7cedc)
+    owner = "flaemer-idk";
+    repo = "way-shell-maybe-forkflaemer";
+    rev = "main"; 
     hash = "sha256-LeuWavVb0/fu0D9nE08HcU8ZqmlZ1GTdEkLCdHqOKrU="; 
   };
 
@@ -81,7 +79,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "Lightweight Wayland shell for Niri";
-    homepage = "https://codeberg.org/flaemer/way-shell-maybeforkflaemer";
+    homepage = "https://github.com/flaemer-idk/way-shell-maybe-forkflaemer";
     license = licenses.gpl2Only;
     platforms = platforms.linux;
   };

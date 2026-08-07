@@ -10,7 +10,6 @@ antimicrox
 
 #snapshot # my webcam is gone gone / thank you and i't newer worked yeah
 #qbittorrent # umm bye bye i don't like you
-fragments # better torrent maybe 
 #paper-plane ##maintein yeah something is gone or something i don't know and no updates yeah
 kid3
 simple-scan
@@ -23,7 +22,6 @@ intel-gpu-tools
 intel-compute-runtime
 intel-media-driver
 
-vscodium
 hydrus
 python3
 

@@ -11,31 +11,31 @@
     ./pkgs/Laptop/packages-cli-notebook.nix    #доп пакеты ноут которые не нужны серверу или пк
     ./pkgs/Laptop/packages-notebook.nix        #доп пакеты ноут которые не нужны серверу или пк
     ./Services/notebook-services.nix           #для ноута сервисы которые не нужны или не возможны для других
-    #./programs/wayfire.nix                     #Wayfire
 
     ./Services/Printer.nix                     #принтер 
     ./Services/services.nix                    #ужасные сервисы
     ./Zapret/zapret.nix                        #zapret btw
     ./User/User.nix                            #юзеры
     
-    ./programs/programs.nix                    #сам хз зачем нужно
-    #./Plasma.nix                               #Kde plasma
-    ./fish.nix                                 #Fish for everyone
-    ./mango-go.nix
+    ./Programs/Programs.nix                    #сам хз зачем нужно
+    ./Programs/Steam.nix
+    #./Programs/Plasma.nix                      #kde plasma
+    #./Programs/Wayfire.nix                     #wayfire
+    ./Programs/Fish.nix                        #Fish for everyone
+    
     ./Services/zram.nix                        #Zram патриотическая озу
     ./Services/openssh.nix                     #SSH вот такое да
-
 
     #./pkgs/packages-servermaybe.nix            #пакеты серверу
     #./Hardware/hardware-server.nix             #для сервера
 
+    ./Services/Server/Boblox.nix               #Нагавнакожанный роблокс какой то
     #./Services/Server/Jellyfin.nix             #jellyfin личный
     #./Services/Server/Gonic.nix                #музыка gonic
     #./Services/Server/Photoview.nix            #photoview хочу как личный пинтерест
     #./Services/Server/Memos.nix                #Memos заметки личный
-    #./Services/Server/Kavita.nix               #Манго тролфейс
     #./Services/Server/Cockpit.nix		          #Типоуправлять смотреть
-    #./Services/Server/
+    #./Services/Server/Mango-go.nix             #Манго тролфейс 2
   ];
 #virtualisation.docker.enable = true;
   security.polkit.enable = true;
@@ -95,7 +95,7 @@
         5900  # VNC
         7000  # Memos заметки шо 
         8000  # Images
-        8080  # Photoview
+        8080  # Roblox servero rbxdservero
         8096  # Jellyfin
         9090  # cockpitпанельда
         47984 47989 48010 # Sunshine / Moonlight 
@@ -107,7 +107,8 @@
         5353  # хз роблокс вроде да
         64989 # хз роблокс вроде да
       ];
-      allowedUDPPortRanges = [ { from = 47998; to = 48010; } ];
+      allowedUDPPortRanges = [ { from = 32768; to = 60999; } ]; #roblox local
+      allowedTCPPortRanges = [ { from = 32768; to = 60999; } ]; #roblox local
     };
   };
 

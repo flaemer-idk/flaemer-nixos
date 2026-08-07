@@ -23,6 +23,8 @@ ffmpeg
 pciutils
 usbutils
 lm_sensors
+psmisc
+fuser
 
 polkit
 
@@ -40,5 +42,7 @@ libva-utils
 vdpauinfo
 libvdpau-va-gl
 libva
+
+repomix
 ];
 }
