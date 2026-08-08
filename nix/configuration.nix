@@ -33,7 +33,7 @@
     #./Services/Server/Jellyfin.nix             #jellyfin личный
     #./Services/Server/Gonic.nix                #музыка gonic
     #./Services/Server/Photoview.nix            #photoview хочу как личный пинтерест
-    #./Services/Server/Memos.nix                #Memos заметки личный
+    ./Services/Server/Memos.nix                #Memos заметки личный
     #./Services/Server/Cockpit.nix		          #Типоуправлять смотреть
     #./Services/Server/Mango-go.nix             #Манго тролфейс 2
   ];
