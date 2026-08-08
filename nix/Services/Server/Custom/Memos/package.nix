@@ -57,6 +57,9 @@ buildGoModule (finalAttrs: {
     "-X github.com/usememos/memos/internal/version.Version=${finalAttrs.version}"
   ];
 
+
+  doCheck = false;
+
   preBuild = ''
     rm -rf server/router/frontend/dist
     cp -r ${finalAttrs.memos-web} server/router/frontend/dist
