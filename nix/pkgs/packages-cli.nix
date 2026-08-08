@@ -1,6 +1,7 @@
 { pkgs, ...}:{
 environment.systemPackages = with pkgs; [
 git
+gh
 wget
 btop
 zapret
@@ -24,7 +25,6 @@ pciutils
 usbutils
 lm_sensors
 psmisc
-fuser
 
 polkit
 

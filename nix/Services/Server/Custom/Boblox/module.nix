@@ -5,6 +5,7 @@ with lib;
 let
   cfg = config.services.boblox;
 
+  # Окружение Python с необходимыми зависимостями для запуска RFD
   pythonEnv = pkgs.python3.withPackages (ps: with ps; [
     pygobject3
     websocket-client
@@ -14,7 +15,6 @@ let
     pyzstd
     py7zr
     lz4
-    # dracopy # Uncomment if available in your nixpkgs channel
   ]);
 in {
   options.services.boblox = {
@@ -35,26 +35,32 @@ in {
 
     placesDir = mkOption {
       type = types.path;
-      default = "/var/lib/boblox/places";
+      default = "/Idkselfhost/Roblox/Places";
       description = "Directory where the Roblox places are stored.";
     };
 
     rfdDir = mkOption {
       type = types.path;
-      default = "/var/lib/boblox/rfd";
+      default = "/Idkselfhost/Roblox/rfd-fork";
       description = "Directory where the unified rfd-fork (containing Source/ and Roblox/) is located.";
     };
 
     dataDir = mkOption {
       type = types.path;
-      default = "/var/lib/boblox";
+      default = "/Idkselfhost/Roblox";
       description = "Directory for daemon state, logs, and sessions.";
     };
 
     tokenFile = mkOption {
       type = types.nullOr types.path;
-      default = null; 
-      description = "Path to the file containing the auth token. If null, the API runs UNPROTECTED and open to anyone.";
+      default = null;
+      description = "Path to the file containing the auth token. If null, the API runs UNPROTECTED.";
+    };
+
+    testMode = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether to run the server in test mode (disables headless cage rendering).";
     };
 
     user = mkOption {
@@ -75,12 +81,6 @@ in {
       description = "Whether to open the API port in the firewall.";
     };
 
-    testMode = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether to run the server in test mode (disables headless cage rendering).";
-    };
-
     extraEnv = mkOption {
       type = types.attrsOf types.str;
       default = {};
@@ -89,53 +89,81 @@ in {
   };
 
   config = mkIf cfg.enable {
-    users.users.${cfg.user} = {
-      isSystemUser = true;
-      group = cfg.group;
-      home = cfg.dataDir;
-      createHome = true;
-      description = "Boblox (rbxdserver) service user";
+    users.users = mkIf (cfg.user == "boblox") {
+      boblox = {
+        isSystemUser = true; # Системный пользователь, чтобы не засорять экран входа (Display Manager)
+        group = cfg.group;
+        shell = pkgs.bash;
+        home = "${cfg.dataDir}/boblox"; # Изолированная домашняя папка (/Idkselfhost/Roblox/boblox)
+        createHome = true;
+        extraGroups = [ "video" "render" "audio" "input" ];
+        linger = true;
+        description = "Boblox Dedicated Game Server User";
+      };
     };
 
-    users.groups.${cfg.group} = {};
+    users.groups = mkIf (cfg.group == "boblox") {
+      boblox = {};
+    };
+
+    # Настройка прав доступа через системный tmpfiles.rules
+    systemd.tmpfiles.rules = [
+      # Основные папки создаются с правами 0777, чтобы вы могли легко управлять файлами
+      "d ${cfg.dataDir} 0777 ${cfg.user} ${cfg.group} - -"
+      "d ${cfg.placesDir} 0777 ${cfg.user} ${cfg.group} - -"
+      "d ${cfg.rfdDir} 0777 ${cfg.user} ${cfg.group} - -"
+      # Личная домашняя папка пользователя boblox остается более защищенной (0755)
+      "d ${cfg.dataDir}/boblox 0755 ${cfg.user} ${cfg.group} - -"
+    ];
 
     systemd.services.boblox = {
       description = "Boblox Headless Server (rbxdserver)";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
-      # Provide runtime dependencies to the service's PATH
+      # Передаем зависимости сборки и окружения в PATH сервиса
       path = with pkgs; [
         pythonEnv
         cage
-        umu-launcher
+        wineWow64Packages.stable
         bash
         coreutils
       ];
 
       serviceConfig = {
-        Type = "simple";fsd
-      
+        Type = "simple";
         User = cfg.user;
         Group = cfg.group;
         WorkingDirectory = cfg.dataDir;
+        
+        RuntimeDirectory = "boblox";
       
-        # Внутри systemd.services.boblox.serviceConfig измените ExecStart:
-        ExecStart = "${cfg.package}/bin/rbxdserver --port ${toString cfg.port} --rfd ${cfg.rfdDir} --places ${cfg.placesDir} --state-dir ${cfg.dataDir}"
-        + (optionalString (cfg.tokenFile != null) " --token-file ${cfg.tokenFile}");
-          
+        ExecStart = "${cfg.package}/bin/rbxdserver --port ${toString cfg.port} --rfd ${cfg.rfdDir} --places ${cfg.placesDir} --data-dir ${cfg.dataDir}"
+          + (optionalString (cfg.tokenFile != null) " --token-file ${cfg.tokenFile}")
+          + (optionalString cfg.testMode " --test");
+        
         Restart = "on-failure";
         RestartSec = "5s";
-
-        # Sandboxing & security settings (tailored to not block Wine / UMU)
-        NoNewPrivileges = true;
-        ProtectHome = "read-only";
-
-        RuntimeDirectory = "boblox";
       };
 
       environment = {
+        HOME = "${cfg.dataDir}/boblox"; # Перенаправляем домашний каталог в изолированную подпапку
+        SHELL = "${pkgs.bash}/bin/bash";
+        
         XDG_RUNTIME_DIR = "/run/boblox";
+        XDG_DATA_HOME = "${cfg.dataDir}/boblox/.local/share";
+        XDG_CACHE_HOME = "${cfg.dataDir}/boblox/.cache";
+        XDG_CONFIG_HOME = "${cfg.dataDir}/boblox/.config";
+
+        LIBSEAT_BACKEND = "noop";             
+        WLR_BACKENDS = "headless";            
+        WLR_HEADLESS_OUTPUTS = "1";           
+        WLR_LIBINPUT_NO_DEVICES = "1";        
+        WLR_RENDERER = "pixman";
+        
+        PYTHONUNBUFFERED = "1";
+        
+        XDG_SESSION_TYPE = "wayland";
       } // cfg.extraEnv;
     };
 
